@@ -1,14 +1,14 @@
+# Порядок старту та завершення, скоріше за все, буде іншим.
 $ go run waitgroups.go
-Worker 5 starting
-Worker 3 starting
-Worker 4 starting
-Worker 1 starting
-Worker 2 starting
-Worker 4 done
-Worker 1 done
-Worker 2 done
-Worker 5 done
-Worker 3 done
+Воркер 5 стартує
+Воркер 1 стартує
+Воркер 3 стартує
+Воркер 4 стартує
+Воркер 2 стартує
+Воркер 5 завершено
+Воркер 1 завершено
+Воркер 2 завершено
+Воркер 3 завершено
+Воркер 4 завершено
 
-# The order of workers starting up and finishing
-# is likely to be different for each invocation.
+

@@ -34,8 +34,8 @@ Select
 Worker Pools
 Обмеження Частоти Запитів|Rate Limiting
 Атомарні Лічильники|Atomic Counters
-Групи очікування|WaitGroups
-Mutexes
+Групи Очікування (WaitGroups)|WaitGroups
+Взаємні Виключення (Mutexes)|Mutexes
 Stateful Goroutines
 Сортування|Sorting
 Сортування функціями|Sorting by Functions
@@ -53,19 +53,19 @@ Epoch
 Форматування Часу|Time Formatting / Parsing
 Генерація випадкових чисел|Random Numbers
 Конвертація Тексту в Числа|Number Parsing
-URL Parsing
+Розбір URL|URL Parsing
 SHA1 Хеші|SHA1 Hashes
 Кодування Base64|Base64 Encoding
 Читання файлів|Reading Files
 Запис файлів|Writing Files
 Рядкові Фільтри|Line Filters
-File Paths
+Файлові Шляхи|File Paths
 Директорії|Directories
-Temporary Files and Directories
+Тимчасові Файли та Директорії|Temporary Files and Directories
 Тестування|Testing
 Командний Рядок - Аргументи|Command-Line Arguments
-Командний Рядок - Прапорці|Command-Line Flags
-Командний Рядок - Додаткові команди|Command-Line Subcommands
+Командний Рядок - Перемикачі|Command-Line Flags
+Командний Рядок - Під Команди|Command-Line Subcommands
 Змінні середовища|Environment Variables
 HTTP Клієнти|HTTP Clients
 HTTP Сервери|HTTP Servers
