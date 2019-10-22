@@ -1,11 +1,11 @@
-// Unit testing is an important part of writing
-// principled Go programs. The `testing` package
-// provides the tools we need to write unit tests
-// and the `go test` command runs tests.
+// Юніт-тестування (або модульне тестування) є важливою частиною написання
+// принципових Go програм. Пакет `testing` надає
+// інструменти, необхідні для написання юніт-тестів,
+// а команда `go test` запускає виконання тестів.
 
-// For the sake of demonstration, this code is in package
-// `main`, but it could be any package. Testing code
-// typically lives in the same package as the code it tests.
+// Для демонстрації ми приводимо код з пакету
+// `main`, але це міг би бути будь-який інший пакет. Код тестів
+// зазвичай розміщують у тому ж самому пакеті, код якого тестують.
 package main
 
 import (
@@ -13,11 +13,11 @@ import (
 	"testing"
 )
 
-// We'll be testing this simple implementation of an
-// integer minimum. Typically, the code we're testing
-// would be in a source file named something like
-// `intutils.go`, and the test file for it would then
-// be named `intutils_test.go`.
+// Ми тестуємо цю просту реалізацію функції знаходження 
+// найменшого числа. Зазвичай, якщо код, який ми збираємось тестувати
+// знаходиться у файлі з іменем, наприклад
+// `intutils.go`, то файл з кодом тестів має
+// називатись відповідно `intutils_test.go`.
 func IntMin(a, b int) int {
 	if a < b {
 		return a
@@ -26,22 +26,22 @@ func IntMin(a, b int) int {
 	}
 }
 
-// A test is created by writing a function with a name
-// beginning with `Test`.
+// Тест створюється шляхом написання функції з іменем,
+// яке має починатися з `Test`.
 func TestIntMinBasic(t *testing.T) {
 	ans := IntMin(2, -2)
 	if ans != -2 {
-		// `t.Error*` will report test failures but continue
-		// executing the test. `t.Fail*` will report test
-		// failures and stop the test immediately.
+		// `t.Error*` повідомить про помилку, але продовжить
+		// виконання тесту. `t.Fail*` повідомить про помилку
+		// та негайно зупинить виконання тесту.
 		t.Errorf("IntMin(2, -2) = %d; want -2", ans)
 	}
 }
 
-// Writing tests can be repetitive, so it's idiomatic to
-// use a *table-driven style*, where test inputs and
-// expected outputs are listed in a table and a single loop
-// walks over them and performs the test logic.
+// Написання тестів може бути повторюваним, тому це ідіоматично
+// використовувати *стиль керований таблицею* (*table-driven style*),
+// де тестові вхідні та очікувані вихідні дані наведені в таблиці, та 
+// в одному циклі проходити ці дані й виконувати алгоритми тестування.
 func TestIntMinTableDriven(t *testing.T) {
 	var tests = []struct {
 		a, b int
@@ -55,9 +55,9 @@ func TestIntMinTableDriven(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		// t.Run enables running "subtests", one for each
-		// table entry. These are shown separately
-		// when executing `go test -v`.
+		// t.Run дозволяє запускати "підтести", по одному для кожного
+		// запису таблиці. Вони відображаються окремо
+		// при виконанні `go test -v`.
 		testname := fmt.Sprintf("%d,%d", tt.a, tt.b)
 		t.Run(testname, func(t *testing.T) {
 			ans := IntMin(tt.a, tt.b)

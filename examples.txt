@@ -62,7 +62,7 @@ SHA1 Хеші|SHA1 Hashes
 File Paths
 Директорії|Directories
 Temporary Files and Directories
-Testing
+Тестування|Testing
 Командний Рядок - Аргументи|Command-Line Arguments
 Командний Рядок - Прапорці|Command-Line Flags
 Командний Рядок - Додаткові команди|Command-Line Subcommands
