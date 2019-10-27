@@ -49,7 +49,7 @@ func main() {
 	createEmptyFile("subdir/parent/child/file4")
 
 	// `ReadDir` зчитає зміст директорії *parent*,
-	// і поверне [зріз](./slice) об'єктів `os.FileInfo`.
+	// і поверне [зріз](./slices) об'єктів `os.FileInfo`.
 	c, err := ioutil.ReadDir("subdir/parent")
 	check(err)
 
@@ -63,7 +63,7 @@ func main() {
 	err = os.Chdir("subdir/parent/child")
 	check(err)
 
-	// Ось, 'ioutil.ReadDir' повертає [зріз](./slice) об'єктів `os.FileInfo`
+	// Ось, 'ioutil.ReadDir' повертає [зріз](./slices) об'єктів `os.FileInfo`
 	// для поточної директорії (якою на даний момент є `subdir/parent/child`).
 	c, err = ioutil.ReadDir(".")
 	check(err)
