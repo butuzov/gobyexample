@@ -1,5 +1,5 @@
-// Go має декілька корисних функцій для роботи з
-// *директоріями* в файловій системі.
+// У Go є кілька корисних функцій для роботи з
+// *директоріями* файлової системи.
 
 package main
 
@@ -18,18 +18,20 @@ func check(e error) {
 
 func main() {
 
-	// Створити нову директорію, під назвою *subdir* в поточній.
-	// Другим параметром являється налаштування [доступу](https://en.wikipedia.org/wiki/File_system_permissions#Numeric_notation) до директорії.
+	// Створюємо директорію за назвою *subdir*. Другим параметром
+	// є налаштування параметрів [доступу](https://en.wikipedia.org/wiki/File_system_permissions#Numeric_notation)
+	// до директорії.
 	err := os.Mkdir("subdir", 0755)
 	check(err)
 
-	// При створенні тимчасової директорії, непоганою ідеєю являється
-	// _відкласти_ її видалення за допомогою [`defer`](./defer).
-	// `os.RemoveAll` видалить директорію *subdir* повністю (разом з вкладеними директоріями) -
-	// аналогічно з `rm -rf subdir` в UNIX-подібних системах.
+	// При створенні тимчасової директорії, гарною ідеєю є
+	// викликати її видалення за допомогою [`відкладення`](./defer).
+	// Функція `os.RemoveAll` видаляє директорію повністю (разом
+	// з вкладеними), за аналогією до`rm -rf subdir` в
+	// UNIX-подібних системах.
 	defer os.RemoveAll("subdir")
 
-	// Допоміжна функція для створення тимчасового файлу.
+	// Допоміжна функція що створює тимчасовий файл.
 	createEmptyFile := func(name string) {
 		d := []byte("")
 		check(ioutil.WriteFile(name, d, 0644))
@@ -38,7 +40,7 @@ func main() {
 	createEmptyFile("subdir/file1")
 
 	// Також можливо створити повну ієрархію директорій за допомогою `MkdirAll`.
-	// Дана команда являється аналогічною до команди `mkdir -p subdir/parent/child`.
+	// Ця функція є аналогом до команди `mkdir -p subdir/parent/child`.
 	err = os.MkdirAll("subdir/parent/child", 0755)
 	check(err)
 
@@ -46,44 +48,44 @@ func main() {
 	createEmptyFile("subdir/parent/file3")
 	createEmptyFile("subdir/parent/child/file4")
 
-	// `ReadDir` зчитує зміст директорії *parent*,
-	// і повертає [зріз](./slice) об'єктів `os.FileInfo`.
+	// `ReadDir` зчитає зміст директорії *parent*,
+	// і поверне [зріз](./slice) об'єктів `os.FileInfo`.
 	c, err := ioutil.ReadDir("subdir/parent")
 	check(err)
 
-	fmt.Println("Listing subdir/parent")
+	fmt.Println("Перегляд subdir/parent")
 	for _, entry := range c {
 		fmt.Println(" ", entry.Name(), entry.IsDir())
 	}
 
-	// `Chdir` дозволяє змінити поточну робочу директорію,
-	// подібно до `cd`.
+	// `Chdir` змінює поточну робочу директорію (так само, як і
+	// команда `cd`).
 	err = os.Chdir("subdir/parent/child")
 	check(err)
 
-	// Дана команда поверне [зріз](./slice) об'єктів `os.FileInfo` для поточної директорії,
-	// якою на даний момент являється `subdir/parent/child`
+	// Ось, 'ioutil.ReadDir' повертає [зріз](./slice) об'єктів `os.FileInfo`
+	// для поточної директорії (якою на даний момент є `subdir/parent/child`).
 	c, err = ioutil.ReadDir(".")
 	check(err)
 
-	fmt.Println("Listing subdir/parent/child")
+	fmt.Println("Перегляд subdir/parent/child")
 	for _, entry := range c {
 		fmt.Println(" ", entry.Name(), entry.IsDir())
 	}
 
-	// `cd` Повернутись на стартову позицію.
+	// Повертаємось до початкової директорії.
 	err = os.Chdir("../../..")
 	check(err)
 
-	// Також ми можемо обійти директорію *рекурсивно*,
-	// включаючи всі вкладені директорії.
-	// `Walk` другим параметром приймає функцію зворотного виклику,
-	// яка буде викликана для кожного *відвіданого* файлу та директорії.
-	fmt.Println("Visiting subdir")
+	// Ми можемо обійти директорію *рекурсивно*, відвідуючи всі
+	// вкладені директорії. `Walk` другим параметром приймає
+	// функцію зворотного виклику, яка викликається для кожного
+	// знайденого файлу та директорії.
+	fmt.Println("Відвідуємо subdir")
 	err = filepath.Walk("subdir", visit)
 }
 
-// `visit` - функція яка буде викликана для кожного файлу чи директорії
+// Функція `visit` буде викликана для кожного файлу чи директорії
 // знайденого в процесі обходу *subdir*.
 func visit(p string, info os.FileInfo, err error) error {
 	if err != nil {

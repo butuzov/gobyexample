@@ -1,11 +1,11 @@
 $ go run directories.go
-Listing subdir/parent
+Перегляд subdir/parent
   child true
   file2 false
   file3 false
-Listing subdir/parent/child
+Перегляд subdir/parent/child
   file4 false
-Visiting subdir
+Відвідуємо subdir
   subdir true
   subdir/file1 false
   subdir/parent true
