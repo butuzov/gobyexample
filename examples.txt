@@ -39,13 +39,13 @@ Worker Pools
 Stateful Goroutines
 Сортування|Sorting
 Сортування функціями|Sorting by Functions
-Паніка|Panic
-Відкладення|Defer
-Відновлення|Recover
+Паніка (Panic)|Panic
+Відкладення (Defer)|Defer
+Відновлення (Recover)|Recover
 Функцій для роботи з колекціями|Collection Functions
 Рядкові Функції|String Functions
 Форматування Рядків|String Formatting
-Регулярні вирази|Regular Expressions
+Регулярні Вирази|Regular Expressions
 JSON
 XML
 Час|Time
