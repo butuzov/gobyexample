@@ -2,23 +2,29 @@ dist: bionic
 
 go: "1.12"
 
-script:
-- ./tests.sh
-# build
+services:
+  - docker
+
+before_install:
 - go get github.com/russross/blackfriday
-- tools/build
-# server
 - go get github.com/CurtisLusmore/ghp
-- ghp -port 9090 -root public 1>/dev/null &
-# run deadlinks checker
-- docker run --rm -it --network=host  butuzov/deadlinks:0.1.0 http://localhost:9090 --fiff -n 10
+- docker pull butuzov/deadlinks:0.1.0
 
-after_success:
-- ls -la public
-- ./deploy.sh
+script:
+  - ./tests.sh
+  - tools/build
+  - ghp -port 9090 -root public 1>/dev/null &
+  - |
+      docker run --rm -it --network=host butuzov/deadlinks:0.1.0 \
+        localhost:9090 --fiff -n 10
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: public
+  on:
+    branch: ukrainian
 
-# Only Ukrainian Branch if for CI/CD
-branches: { only: [ 'ukrainian', 'deployment' ] }
 
 # Notifications settings.
 notifications:
