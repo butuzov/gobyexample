@@ -1,15 +1,24 @@
-language: go
+dist: bionic
 
 go: "1.12"
 
 script:
 - ./tests.sh
+# build
+- go get github.com/russross/blackfriday
+- tools/build
+# server
+- go get github.com/CurtisLusmore/ghp
+- ghp -port 9090 -root public 1>/dev/null &
+# run deadlinks checker
+- docker run --rm -it --network=host  butuzov/deadlinks:0.1.0 http://localhost:9090 --fiff -n 10
 
 after_success:
-- ./deploy.sh
+- ls -la public
+# - ./deploy.sh
 
 # Only Ukrainian Branch if for CI/CD
-branches: { only: [ 'ukrainian' ] }
+branches: { only: [ 'ukrainian', 'deployment' ] }
 
 # Notifications settings.
 notifications:
