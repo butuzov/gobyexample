@@ -15,7 +15,7 @@ script:
 
 after_success:
 - ls -la public
-# - ./deploy.sh
+- ./deploy.sh
 
 # Only Ukrainian Branch if for CI/CD
 branches: { only: [ 'ukrainian', 'deployment' ] }
