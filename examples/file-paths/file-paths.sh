@@ -4,6 +4,7 @@ dir1/filename
 dir1/filename
 Dir(p): dir1/dir2
 Base(p): filename
+Dir(p): dir1/dir2/ та Base(p): filename
 false
 true
 .json
