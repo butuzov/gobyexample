@@ -7,16 +7,13 @@ services:
 
 before_install:
 - go get github.com/russross/blackfriday
-- go get github.com/CurtisLusmore/ghp
-- docker pull butuzov/deadlinks:0.1.0
+- docker pull butuzov/deadlinks:dev
 
 script:
   - ./tests.sh
   - tools/build
-  - ghp -port 9090 -root public 1>/dev/null &
-  - |
-      docker run --rm -it --network=host butuzov/deadlinks:0.1.0 \
-        localhost:9090 --fiff -n 10
+  - ls -la public
+
 deploy:
   provider: pages
   skip_cleanup: true
