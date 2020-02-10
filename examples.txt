@@ -69,6 +69,7 @@ SHA1 Хеші|SHA1 Hashes
 Змінні середовища|Environment Variables
 HTTP Клієнти|HTTP Clients
 HTTP Сервери|HTTP Servers
+Context
 Запуск сторонніх процесів|Spawning Processes
 Заміна поточного процесу новим|Exec'ing Processes
 Сигнали|Signals

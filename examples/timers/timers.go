@@ -20,21 +20,21 @@ func main() {
 	// `<-timer1.C` блокується каналом `C` допоки не буде
 	// надіслано повідомлення що час минув.
 	<-timer1.C
-	fmt.Println("Таймер 1 прострочено")
-
-	// Якщо вам просто хочеться зачекати, скористайтесь `time.Sleep`.
-	fmt.Println("Очікуємо 1 секунду")
-	time.Sleep(1 * time.Second)
-	fmt.Println("Очікування завершелось")
+	fmt.Println("Тaймер 1 запущено")
 
 	// Крім того, не забувайте, хронометр можна зупинити в будь-який момент.
 	timer2 := time.NewTimer(time.Second)
 	go func() {
 		<-timer2.C
-		fmt.Println("Таймер 2 просрочено")
+		fmt.Println("Тaймер 2 запущено")
+
 	}()
 	stop2 := timer2.Stop()
 	if stop2 {
 		fmt.Println("Тaймер 2 зупинено")
 	}
+
+	// Give the `timer2` enough time to fire, if it ever
+	// was going to, to show it is in fact stopped.
+	time.Sleep(2 * time.Second)
 }
