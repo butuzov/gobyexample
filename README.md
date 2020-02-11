@@ -14,16 +14,36 @@
 
 Щоб побудувати сайт - вам знадобляться Go та Python. Запустіть:
 
-```bash
-> go get github.com/russross/blackfriday
-> tools/build
-> open public/index.html
+```console
+$ go get github.com/russross/blackfriday
+$ tools/build
+$ open public/index.html
 ```
 
-Щоб будувати безперервно скористайтесь (хоч, насправді, це не так зручно):
+To build continuously in a loop:
 
 ```bash
+> go get github.com/russross/blackfriday
 > tools/build-loop
+```
+
+To see the site locally:
+
+```
+$ tools/serve
+```
+
+and open `http://127.0.0.1:8000/` in your browser.
+
+### Publishing
+
+Щоб завантажити сайт на AWS:
+
+```bash
+> gem install aws-sdk
+> export AWS_ACCESS_KEY_ID=...
+> export AWS_SECRET_ACCESS_KEY=...
+> tools/upload
 ```
 
 ### Ліцензія
