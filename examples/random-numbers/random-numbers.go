@@ -38,7 +38,7 @@ func main() {
 	s1 := rand.NewSource(time.Now().UnixNano())
 	r1 := rand.New(s1)
 
-	// Виклик результуючого `rand.Rand` проходить аналогічно
+	// Виклик результатного `rand.Rand` проходить аналогічно
 	// функціям пакету `rand`.
 	fmt.Print(r1.Intn(100), ",")
 	fmt.Print(r1.Intn(100))

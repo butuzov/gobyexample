@@ -19,7 +19,7 @@ func main() {
 	// Тут, за допомогою функції `NewFlagSet`, визначається нова команда.
 	fooCmd := flag.NewFlagSet("foo", flag.ExitOnError)
 	// Далі оголошуються два додаткові параметри `enable` і `name`
-	// з типами булеан и стрічка відповідно.
+	// з типами ціле и стрічка відповідно.
 	fooEnable := fooCmd.Bool("enable", false, "enable")
 	fooName := fooCmd.String("name", "", "name")
 

@@ -13,7 +13,7 @@ import (
 // кодера та декодера. Тут ми використовуємо деякі особливості
 // пакета XML: назва поля `XMLName` вказує на
 // назви елемента в XML, що представляє цю структуру;
-// `id,attr` означає, що поле `id` є _атрибутом_ тега `plant`.
+// `id,attr` означає, що поле `id` є _атрибутом_ тегу `plant`.
 type Plant struct {
 	XMLName xml.Name `xml:"plant"`
 	Id      int      `xml:"id,attr"`
@@ -30,7 +30,7 @@ func main() {
 	coffee := &Plant{Id: 27, Name: "Coffee"}
 	coffee.Origin = []string{"Ethiopia", "Brazil"}
 
-	// Тепер можна сстворити XML, із структури `Plant`. Використовуйте
+	// Тепер можна створити XML, із структури `Plant`. Використовуйте
 	// `MarshalIndent` для отримання більш зрозумілого для людини результату.
 	out, _ := xml.MarshalIndent(coffee, " ", "  ")
 	fmt.Println(string(out))

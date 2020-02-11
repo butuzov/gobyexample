@@ -24,9 +24,9 @@ func main() {
 	fmt.Println(filepath.Join("dir1//", "filename"))
 	fmt.Println(filepath.Join("dir1/../dir1", "filename"))
 
-	// Скористаємось `Dir` та `Base` для визначення каталога та
+	// Скористаємось `Dir` та `Base` для визначення каталогу та
 	// файлу з наданого шляху. Альтернативою є `Split`- який буде
-	// повертати обидва значення за однин виклик.
+	// повертати обидва значення за одни виклик.
 	fmt.Println("Dir(p):", filepath.Dir(p))
 	fmt.Println("Base(p):", filepath.Base(p))
 	dir, file := filepath.Split(p)

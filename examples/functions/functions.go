@@ -13,7 +13,7 @@ func plus(a int, b int) int {
 }
 
 // За виключенням, коли ми вказуємо можемо додатково вказати зміну
-// для повернення, (зверніть увагу на приклад з змінною summ).
+// для повернення, (зверніть увагу на приклад з змінною summa).
 func plusNames(a int, b int) (summa int) {
 	summa = a + b
 	return
@@ -21,7 +21,7 @@ func plusNames(a int, b int) (summa int) {
 
 // Коли у вас кілька послідовних параметрів одного типу,
 // дозволяється пропускати тип - вказуючи його лише
-// для останнього аргумента.
+// для останнього аргументу.
 func plusPlus(a, b, c int) int {
 	return a + b + c
 }
@@ -29,6 +29,9 @@ func plusPlus(a, b, c int) int {
 func main() {
 	res := plus(1, 2)
 	fmt.Println("1+2 =", res)
+
+	res = plusNames(1, 3)
+	fmt.Println("1+3 =", res)
 
 	res = plusPlus(1, 2, 3)
 	fmt.Println("1+2+3 =", res)
