@@ -13,8 +13,8 @@ type person struct {
 	age  int
 }
 
-// NewPerson constructs a new person struct with the given name
-func NewPerson(name string) *person {
+// `newPerson` constructs a new person struct with the given name.
+func newPerson(name string) *person {
 	// You can safely return a pointer to local variable
 	// as a local variable will survive the scope of the function.
 	p := person{name: name}
@@ -23,7 +23,6 @@ func NewPerson(name string) *person {
 }
 
 func main() {
-
 	// Наступний синтаксис створить нову структуру.
 	// Дозволяється іменувати поля при ініціалізації структури.
 	fmt.Println(person{name: "Alice", age: 30})
@@ -40,7 +39,7 @@ func main() {
 
 	// Приховувати процес створення стуктури іншою функцією - це
 	// ідіоматичний підхід у Go.
-	fmt.Println(NewPerson("Jon"))
+	fmt.Println(newPerson("Jon"))
 
 	// Доступ до полів надається через синтаксис крапки `.`
 	s := person{name: "Sean", age: 50}

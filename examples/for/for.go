@@ -6,7 +6,6 @@ package main
 import "fmt"
 
 func main() {
-
 	// Найбільш розповсюдженим є тип з єдиною інструкцією.
 	i := 1
 	for i <= 3 {

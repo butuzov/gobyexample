@@ -21,9 +21,8 @@ import (
 func IntMin(a, b int) int {
 	if a < b {
 		return a
-	} else {
-		return b
 	}
+	return b
 }
 
 // Тест створюється шляхом написання функції з іменем,
@@ -43,7 +42,7 @@ func TestIntMinBasic(t *testing.T) {
 // де тестові - вхідні та очікувані дані наведені в таблиці, та
 // в одному циклі проходити ці дані й виконувати тести.
 func TestIntMinTableDriven(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		a, b int
 		want int
 	}{

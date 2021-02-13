@@ -51,6 +51,7 @@ func main() {
 	// Аргументи `ioutil.TempDir` такі ж, як і у` TempFile`,
 	// але результатом буде ім'я *каталогу*.
 	dname, err := ioutil.TempDir("", "sampledir")
+	check(err)
 	fmt.Println("Temp dir name:", dname)
 
 	defer os.RemoveAll(dname)

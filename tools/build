@@ -6,6 +6,8 @@ verbose() {
 	! test -z "$VERBOSE"
 }
 
+export GO111MODULE=off
+
 verbose && echo "Running tests..."
 tools/test
 
