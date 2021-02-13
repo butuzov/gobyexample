@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: Діапазон (Range) з Каналами</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'closing-channels.html';
+		}
+	
+	
+		if (e.key == "ArrowRight") {
+			window.location.href = 'timers.html';
+		}
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="range-over-channels">
+	<h2><a href="./">Go за Прикладом</a>: Діапазон (Range) з Каналами</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>В попередньому <a href="range">прикладі</a> ми дізнались як <code>for</code> та
+<code>range</code> забезпечують ітерацію базових структур даних,
+але цей синтаксис можна використати і для отримання значень з каналу.</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/qjiJxrOXbeD"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ми створимо канал <code>queue</code> і надішлемо до нього два строкових значення,
+після чого ми закриємо його.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">queue</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">string</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="nx">queue</span> <span class="o">&lt;-</span> <span class="s">&quot;раз&quot;</span>
+    <span class="nx">queue</span> <span class="o">&lt;-</span> <span class="s">&quot;два&quot;</span>
+    <span class="nb">close</span><span class="p">(</span><span class="nx">queue</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Скориставшись <code>range</code> ми пройдемось по значеннях <code>queue</code>, a так як ми
+закрили цей канал - ітерація припиняється, після отримання
+усіх (2) елементів з нього.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre>    <span class="k">for</span> <span class="nx">elem</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">queue</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">elem</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Цей приклад також демонструє здатність закривати не пустий канал і
+все ж отримувати з нього значення.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go run range-over-channels.go
+<span class="go">one</span>
+<span class="go">two</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+	<p class="next">
+		Наступний приклад: <a href="timers.html">Хронометри (Timers)</a>.
+	</p>
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/range-over-channels">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import \"fmt\"\u000A');codeLines.push('func main() {\u000A');codeLines.push('    queue := make(chan string, 2)\u000A    queue \x3C- \"раз\"\u000A    queue \x3C- \"два\"\u000A    close(queue)\u000A');codeLines.push('    for elem := range queue {\u000A        fmt.Println(elem)\u000A    }\u000A}\u000A');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>

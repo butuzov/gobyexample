@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: JSON</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'regular-expressions.html';
+		}
+	
+	
+		if (e.key == "ArrowRight") {
+			window.location.href = 'xml.html';
+		}
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="json">
+	<h2><a href="./">Go за Прикладом</a>: JSON</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Go підтримує кодування та розкодування формату JSON
+на рівні, як базових типів даних, так і власних
+структур даних, так би кажучи &ldquo;з коробки&rdquo;.</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/mHGO80JQ44w"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;encoding/json&quot;</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;os&quot;</span>
+<span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ми скористаємось цими структурами для демонстрації
+кодування та розкодування нетипових для Go структур даних.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">type</span> <span class="nx">response1</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Page</span>   <span class="kt">int</span>
+    <span class="nx">Fruits</span> <span class="p">[]</span><span class="kt">string</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Тільки експортовані поля будуть закодовані/розкодовані у JSON.
+Поля повинні починатись з великої літери, щоб бути &ldquo;експортованими&rdquo;.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">type</span> <span class="nx">response2</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Page</span>   <span class="kt">int</span>      <span class="s">`json:&quot;page&quot;`</span>
+    <span class="nx">Fruits</span> <span class="p">[]</span><span class="kt">string</span> <span class="s">`json:&quot;fruits&quot;`</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Для початку ми розглянемо кодування базових
+типів, доступних у Go, в формат JSON.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">bolB</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">bolB</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">intB</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">intB</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fltB</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="mf">2.34</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">fltB</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">strB</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="s">&quot;gopher&quot;</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">strB</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>В цьому прикладі ми працюємо з коллекціями
+- зрізами та мапами, що будуть кодуватись в JSON
+об&rsquo;єкти передбачуваним (стандартизованим) чином.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">slcD</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;apple&quot;</span><span class="p">,</span> <span class="s">&quot;peach&quot;</span><span class="p">,</span> <span class="s">&quot;pear&quot;</span><span class="p">}</span>
+    <span class="nx">slcB</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="nx">slcD</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">slcB</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">mapD</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">&quot;apple&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s">&quot;lettuce&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">}</span>
+    <span class="nx">mapB</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="nx">mapD</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">mapB</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Пакет JSON автоматично кодує ваші типи даних.
+Це дозволяє автоматично включати експортовані
+поля до вашого виводу, або навпаки - виключати
+не-експортовані з цього виводу. По-замовчуванню,
+ці елементи будуть носити тіж назви, що і поля
+структури яка кодувалась.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">res1D</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">response1</span><span class="p">{</span>
+        <span class="nx">Page</span><span class="p">:</span>   <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">Fruits</span><span class="p">:</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;apple&quot;</span><span class="p">,</span> <span class="s">&quot;peach&quot;</span><span class="p">,</span> <span class="s">&quot;pear&quot;</span><span class="p">}}</span>
+    <span class="nx">res1B</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="nx">res1D</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">res1B</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ви можете скористатись тегами або метаданим для
+декларації полів у вашій структурі даних, гнучко налаштовуючи
+логіку відображення або споживання даних за ключами.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">res2D</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">response2</span><span class="p">{</span>
+        <span class="nx">Page</span><span class="p">:</span>   <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">Fruits</span><span class="p">:</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;apple&quot;</span><span class="p">,</span> <span class="s">&quot;peach&quot;</span><span class="p">,</span> <span class="s">&quot;pear&quot;</span><span class="p">}}</span>
+    <span class="nx">res2B</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Marshal</span><span class="p">(</span><span class="nx">res2D</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">res2B</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Тепер, розглянемо як декодувати дані з формату JSON
+у значення Go, на прикладі узагальненої структури.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">byt</span> <span class="o">:=</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="s">`{&quot;num&quot;:6.13,&quot;strs&quot;:[&quot;a&quot;,&quot;b&quot;]}`</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ми починаємо з того, що декларуємо змінну, якою пакет
+JSON скористається для збереження розкодованих даних.
+Змінна <code>dat</code> з типом <code>map[string]interface{}</code> буде зберігати
+дані у вигляді мапи з рядковим ключем та значенням довільного типу.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">dat</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kd">interface</span><span class="p">{}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Розкодуємо наш JSON та проведемо перевірку на можливі помилки.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">Unmarshal</span><span class="p">(</span><span class="nx">byt</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">dat</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="nb">panic</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">dat</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Для використання даних розкодованої мапи, нам необхідно буде
+конвертувати (англійською <code>cast</code>) дані (тому що значення
+нашої мапи - початково не типізовані - <code>interface{}</code>), щоб
+продовжити роботу вже з чітко визначеним типом,
+що підтримується Go. Для прикладу ми конвертуємо значення
+мапи за ключем <code>num</code> в тип <code>float64</code>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">num</span> <span class="o">:=</span> <span class="nx">dat</span><span class="p">[</span><span class="s">&quot;num&quot;</span><span class="p">].(</span><span class="kt">float64</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">num</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Доступ до вкладених даних - потребує серії конвертацій.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">strs</span> <span class="o">:=</span> <span class="nx">dat</span><span class="p">[</span><span class="s">&quot;strs&quot;</span><span class="p">].([]</span><span class="kd">interface</span><span class="p">{})</span>
+    <span class="nx">str1</span> <span class="o">:=</span> <span class="nx">strs</span><span class="p">[</span><span class="mi">0</span><span class="p">].(</span><span class="kt">string</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">str1</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Слід використовувати ваші власні структури даних для
+розкодування даних, це гарантія додаткової типо-безпеки,
+що прибирає необхідність перевіряти типи під час використання.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">str</span> <span class="o">:=</span> <span class="s">`{&quot;page&quot;: 1, &quot;fruits&quot;: [&quot;apple&quot;, &quot;peach&quot;]}`</span>
+    <span class="nx">res</span> <span class="o">:=</span> <span class="nx">response2</span><span class="p">{}</span>
+    <span class="nx">json</span><span class="p">.</span><span class="nx">Unmarshal</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="nx">str</span><span class="p">),</span> <span class="o">&amp;</span><span class="nx">res</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">res</span><span class="p">.</span><span class="nx">Fruits</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>У, вже розглянутих, прикладах ми використовуємо зрізи байтів
+та рядки як посередники між даними та JSON репрезентацією
+для виводу до стандартного потоку даних. Подивіться, як
+можна скористатись перенаправленням потоку за допомогою
+власної реалізацію інтерфейсу <code>Writer</code>, наприклад <code>os.Writer</code>,
+або навіть запис у HTTP Response.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre>    <span class="nx">enc</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nx">NewEncoder</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stdout</span><span class="p">)</span>
+    <span class="nx">d</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">&quot;apple&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s">&quot;lettuce&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">}</span>
+    <span class="nx">enc</span><span class="p">.</span><span class="nx">Encode</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go run json.go
+<span class="go">true</span>
+<span class="go">1</span>
+<span class="go">2.34</span>
+<span class="go">&quot;gopher&quot;</span>
+<span class="go">[&quot;apple&quot;,&quot;peach&quot;,&quot;pear&quot;]</span>
+<span class="go">{&quot;apple&quot;:5,&quot;lettuce&quot;:7}</span>
+<span class="go">{&quot;Page&quot;:1,&quot;Fruits&quot;:[&quot;apple&quot;,&quot;peach&quot;,&quot;pear&quot;]}</span>
+<span class="go">{&quot;page&quot;:1,&quot;fruits&quot;:[&quot;apple&quot;,&quot;peach&quot;,&quot;pear&quot;]}</span>
+<span class="go">map[num:6.13 strs:[a b]]</span>
+<span class="go">6.13</span>
+<span class="go">a</span>
+<span class="go">{1 [apple peach]}</span>
+<span class="go">apple</span>
+<span class="go">{&quot;apple&quot;:5,&quot;lettuce&quot;:7}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ми ознайомились з базовою роботою Go з форматом JSON,
+і радимо прочитати статтю <a href="http://blog.golang.org/2011/01/json-and-go.html">JSON та Go</a>
+та документацію <a href="http://golang.org/pkg/encoding/json/">пакету JSON</a>
+для отримання більш розгорнутої інформації про сам пакет в Go.</p>
+</td>
+			<td class="code empty">
+			
+			
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+	<p class="next">
+		Наступний приклад: <a href="xml.html">XML</a>.
+	</p>
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/json">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import (\u000A    \"encoding/json\"\u000A    \"fmt\"\u000A    \"os\"\u000A)\u000A');codeLines.push('type response1 struct {\u000A    Page   int\u000A    Fruits []string\u000A}\u000A');codeLines.push('type response2 struct {\u000A    Page   int      `json:\"page\"`\u000A    Fruits []string `json:\"fruits\"`\u000A}\u000A');codeLines.push('func main() {\u000A');codeLines.push('    bolB, _ := json.Marshal(true)\u000A    fmt.Println(string(bolB))\u000A');codeLines.push('    intB, _ := json.Marshal(1)\u000A    fmt.Println(string(intB))\u000A');codeLines.push('    fltB, _ := json.Marshal(2.34)\u000A    fmt.Println(string(fltB))\u000A');codeLines.push('    strB, _ := json.Marshal(\"gopher\")\u000A    fmt.Println(string(strB))\u000A');codeLines.push('    slcD := []string{\"apple\", \"peach\", \"pear\"}\u000A    slcB, _ := json.Marshal(slcD)\u000A    fmt.Println(string(slcB))\u000A');codeLines.push('    mapD := map[string]int{\"apple\": 5, \"lettuce\": 7}\u000A    mapB, _ := json.Marshal(mapD)\u000A    fmt.Println(string(mapB))\u000A');codeLines.push('    res1D := &response1{\u000A        Page:   1,\u000A        Fruits: []string{\"apple\", \"peach\", \"pear\"}}\u000A    res1B, _ := json.Marshal(res1D)\u000A    fmt.Println(string(res1B))\u000A');codeLines.push('    res2D := &response2{\u000A        Page:   1,\u000A        Fruits: []string{\"apple\", \"peach\", \"pear\"}}\u000A    res2B, _ := json.Marshal(res2D)\u000A    fmt.Println(string(res2B))\u000A');codeLines.push('    byt := []byte(`{\"num\":6.13,\"strs\":[\"a\",\"b\"]}`)\u000A');codeLines.push('    var dat map[string]interface{}\u000A');codeLines.push('    if err := json.Unmarshal(byt, &dat); err != nil {\u000A        panic(err)\u000A    }\u000A    fmt.Println(dat)\u000A');codeLines.push('    num := dat[\"num\"].(float64)\u000A    fmt.Println(num)\u000A');codeLines.push('    strs := dat[\"strs\"].([]interface{})\u000A    str1 := strs[0].(string)\u000A    fmt.Println(str1)\u000A');codeLines.push('    str := `{\"page\": 1, \"fruits\": [\"apple\", \"peach\"]}`\u000A    res := response2{}\u000A    json.Unmarshal([]byte(str), &res)\u000A    fmt.Println(res)\u000A    fmt.Println(res.Fruits[0])\u000A');codeLines.push('    enc := json.NewEncoder(os.Stdout)\u000A    d := map[string]int{\"apple\": 5, \"lettuce\": 7}\u000A    enc.Encode(d)\u000A}\u000A');codeLines.push('');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>

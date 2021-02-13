@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: Сортування функціями</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'sorting.html';
+		}
+	
+	
+		if (e.key == "ArrowRight") {
+			window.location.href = 'panic.html';
+		}
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="sorting-by-functions">
+	<h2><a href="./">Go за Прикладом</a>: Сортування функціями</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Інколи виникає необхідність у реалізації сортування,
+але по-іншому, не в натуральному порядку. Наприклад,
+сортування рядків за довжиною, на противагу сортуванню
+за алфавітом. Спробуємо розібратись як це реалізувати у GO.</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/rtkU3nqWcJ_n"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;sort&quot;</span>
+<span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Щоб відсортувати колекцію, використовуючи власні правилами в Go,
+нам спочатку треба мати цю колекцію. Створюємо тип <code>byLength</code>
+(заДовжиною) який являє собою псевдонім до зрізу рядків <code>[]string</code>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">type</span> <span class="nx">byLength</span> <span class="p">[]</span><span class="kt">string</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Нам необхідно реалізувати наступний інтерфейс - <code>sort.Interface</code>,
+тобто створити методи <code>Len</code>, <code>Less</code> та <code>Swap</code> - які будуть оперувати
+на нашому типі даних, що дозволить нам використати узагальнену
+функцію <code>Sort</code> пакету <code>sort</code>. <code>Len</code> та <code>Swap</code> зазвичай будуть схожими
+до інших свої аналогів. Найбільш відрізнятиметься <code>Less</code>, ця функція,
+реалізовує власну логіку сортування, яка (в нашому випадку)
+полягає в порівнянні довжини рядків.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="nx">byLength</span><span class="p">)</span> <span class="nx">Len</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="nx">byLength</span><span class="p">)</span> <span class="nx">Swap</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">j</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">s</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span> <span class="nx">s</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="p">=</span> <span class="nx">s</span><span class="p">[</span><span class="nx">j</span><span class="p">],</span> <span class="nx">s</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="nx">byLength</span><span class="p">)</span> <span class="nx">Less</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="nx">j</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">[</span><span class="nx">j</span><span class="p">])</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Після реалізації інтерфейсу <code>sort.Interface</code>, ми можемо
+спробувати наше сортування на прикладі зрізу <code>fruits</code>, початково
+конвертувавши зріз у тип <code>byLength</code>, передавши його у
+використання <code>sort.Sort</code> .</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">fruits</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;персик&quot;</span><span class="p">,</span> <span class="s">&quot;банан&quot;</span><span class="p">,</span> <span class="s">&quot;ківі&quot;</span><span class="p">}</span>
+    <span class="nx">sort</span><span class="p">.</span><span class="nx">Sort</span><span class="p">(</span><span class="nx">byLength</span><span class="p">(</span><span class="nx">fruits</span><span class="p">))</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">fruits</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Запуск нашої програми покаже нам перелік фруктів
+відсортований за довжиною рядка.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go run sorting-by-functions.go
+<span class="go">[ківі банан персик]</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Створючи новий тип даних, реалізуючи методи
+інтерфейсу <code>sort.Interface</code> по відношенню до цього
+типу даних і викликаючи sort.Sort з аргументом
+(новоствореним типом даних)  - ми отримуємо здатність
+до сортування за власною логікою.</p>
+</td>
+			<td class="code empty">
+			
+			
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+	<p class="next">
+		Наступний приклад: <a href="panic.html">Паніка (Panic)</a>.
+	</p>
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/sorting-by-functions">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import (\u000A    \"fmt\"\u000A    \"sort\"\u000A)\u000A');codeLines.push('type byLength []string\u000A');codeLines.push('func (s byLength) Len() int {\u000A    return len(s)\u000A}\u000Afunc (s byLength) Swap(i, j int) {\u000A    s[i], s[j] = s[j], s[i]\u000A}\u000Afunc (s byLength) Less(i, j int) bool {\u000A    return len(s[i]) \x3C len(s[j])\u000A}\u000A');codeLines.push('func main() {\u000A    fruits := []string{\"персик\", \"банан\", \"ківі\"}\u000A    sort.Sort(byLength(fruits))\u000A    fmt.Println(fruits)\u000A}\u000A');codeLines.push('');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>

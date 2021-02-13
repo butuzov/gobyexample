@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: Exit</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'signals.html';
+		}
+	
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="exit">
+	<h2><a href="./">Go за Прикладом</a>: Exit</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Скористайтесь <code>os.Exit</code> для негайного виходу з
+<a href="https://en.wikipedia.org/wiki/Exit_status">відповідним статусом</a>.</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/hDLdikOHB8e"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;os&quot;</span>
+<span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Відкладений виклик ( за допомогою <code>defer</code>) ніколи не буде
+запущено, якщо використовується <code>os.Exit</code>, тобто <code>fmt.Println</code>
+просто не виконається.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="k">defer</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;!&quot;</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Завершити з програму з статусом 3.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">os</span><span class="p">.</span><span class="nx">Exit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Напротивагу С/С++, Go не потребує використовувати
+ціле число, як значення що повертається з функції main
+(щоб вказати операційні системі з яким статусом
+завершилась програма). Тобто, якщо ви захочете
+вийти з ненульовим статусом - ви змушені будете
+скористатись <code>os.Exit</code>.</p>
+</td>
+			<td class="code empty">
+			
+			
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Якщо ви запустите <code>exit.go</code> використовуючи
+<code>go run</code>, то статус виходу буде підібрано
+<code>go</code> і надруковано.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go run exit.go
+<span class="go">exit status 3</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Якщо ви скомпілюєте та запустите бінарний файл,
+ви зможете підхопити статус код в терміналі
+самостійно.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go build exit.go
+<span class="gp">$</span> ./exit
+<span class="gp">$</span> <span class="nb">echo</span> <span class="nv">$?</span>
+<span class="go">3</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Зауважте що <code>!</code> з нашої програми ніколи не
+буде надруковано.</p>
+</td>
+			<td class="code empty">
+			
+			
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/exit">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import (\u000A    \"fmt\"\u000A    \"os\"\u000A)\u000A');codeLines.push('func main() {\u000A');codeLines.push('    defer fmt.Println(\"!\")\u000A');codeLines.push('    os.Exit(3)\u000A}\u000A');codeLines.push('');codeLines.push('');codeLines.push('');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>

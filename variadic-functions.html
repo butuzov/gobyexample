@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: Варіативні Функції (Variadic Functions)</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'multiple-return-values.html';
+		}
+	
+	
+		if (e.key == "ArrowRight") {
+			window.location.href = 'closures.html';
+		}
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="variadic-functions">
+	<h2><a href="./">Go за Прикладом</a>: Варіативні Функції (Variadic Functions)</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p><a href="http://en.wikipedia.org/wiki/Variadic_function"><em>Варіативна функція</em></a>
+може бути викликана з будь-якою кількістю елементів.
+Так-от, <code>fmt.Println</code> - є прикладом варіативної функції.</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/qlHyu0xgIyA"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ця функція, прийме своїм аргументом довільну кількість цілих чисел.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">sum</span><span class="p">(</span><span class="nx">nums</span> <span class="o">...</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Print</span><span class="p">(</span><span class="nx">nums</span><span class="p">,</span> <span class="s">&quot; &quot;</span><span class="p">)</span>
+    <span class="nx">total</span> <span class="o">:=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">num</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">nums</span> <span class="p">{</span>
+        <span class="nx">total</span> <span class="o">+=</span> <span class="nx">num</span>
+    <span class="p">}</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">total</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Варіативні функції, можуть бути викликані звичайним чином з окремо вказаними аргументами.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="nx">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Також можливо &lsquo;розпакувати&rsquo; аргументи, які знаходяться вигляді <a href="./slices"><code>зрізу</code></a>,
+скориставшись синтаксисом розпаковування - <code>func(slice...)</code>.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre>    <span class="nx">nums</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">}</span>
+    <span class="nx">sum</span><span class="p">(</span><span class="nx">nums</span><span class="o">...</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go run variadic-functions.go
+<span class="go">[1 2] 3</span>
+<span class="go">[1 2 3] 6</span>
+<span class="go">[1 2 3 4] 10</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Іншим ключовим аспектом функцій в Go - є їх
+здатність створювати замикання, що є
+нашою наступною темою.</p>
+</td>
+			<td class="code empty">
+			
+			
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+	<p class="next">
+		Наступний приклад: <a href="closures.html">Замикання (Closures)</a>.
+	</p>
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/variadic-functions">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import \"fmt\"\u000A');codeLines.push('func sum(nums ...int) {\u000A    fmt.Print(nums, \" \")\u000A    total := 0\u000A    for _, num := range nums {\u000A        total += num\u000A    }\u000A    fmt.Println(total)\u000A}\u000A');codeLines.push('func main() {\u000A');codeLines.push('    sum(1, 2)\u000A    sum(1, 2, 3)\u000A');codeLines.push('    nums := []int{1, 2, 3, 4}\u000A    sum(nums...)\u000A}\u000A');codeLines.push('');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>

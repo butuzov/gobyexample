@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: Регулярні Вирази</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'string-formatting.html';
+		}
+	
+	
+		if (e.key == "ArrowRight") {
+			window.location.href = 'json.html';
+		}
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="regular-expressions">
+	<h2><a href="./">Go за Прикладом</a>: Регулярні Вирази</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Як і інші мови програмування - Go має підтримку
+<a href="https://uk.wikipedia.org/wiki/Регулярний_вираз">регулярних виразів</a>
+у стандартній бібліотеці. Ось, деякі приклади задач, що так чи
+інакше пов&rsquo;язані з регулярними виразами (або <code>regexp</code> - як їх зазвичай називають).</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/cYT2OnOFs8a"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;bytes&quot;</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;regexp&quot;</span>
+<span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Тестуємо - чи наш шаблон співпадає з рядком.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">match</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">regexp</span><span class="p">.</span><span class="nx">MatchString</span><span class="p">(</span><span class="s">&quot;p([a-z]+)ch&quot;</span><span class="p">,</span> <span class="s">&quot;peach&quot;</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">match</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Рядком вище - ми скористались рядковим шаблоном напряму,
+але для інших задач, пов&rsquo;язаних з регулярними виразами,
+нам необхідно буде <code>Compile</code> (скомпілювати) рядковий
+шаблон у <code>Regexp</code> структуру.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">r</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">regexp</span><span class="p">.</span><span class="nx">Compile</span><span class="p">(</span><span class="s">&quot;p([a-z]+)ch&quot;</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>На таких структура доступно чимало різних методів:
+ось наприклад співставлення з рядком, що ми бачили в
+першому прикладі.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">MatchString</span><span class="p">(</span><span class="s">&quot;peach&quot;</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>А тут, ми знаходимо збіги для нашого regexp&rsquo;а.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">FindString</span><span class="p">(</span><span class="s">&quot;peach punch&quot;</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Цей приклад теж знайде збіги, але поверне початковий
+та кінцевий індекси, замість рядка що збігається.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">FindStringIndex</span><span class="p">(</span><span class="s">&quot;peach punch&quot;</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Варіації методів <code>Submatch</code> включать інформацію про
+повні збіги та часткові збіги в межах повних. Наприклад -
+це поверне інформацію про regexp&rsquo;и <code>p([a-z]+)ch</code>
+та <code>([a-z]+)</code>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">FindStringSubmatch</span><span class="p">(</span><span class="s">&quot;peach punch&quot;</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Схожим чином - ми можемо отримати індекс повного і
+часткового збігу.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">FindStringSubmatchIndex</span><span class="p">(</span><span class="s">&quot;peach punch&quot;</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Варіації методів <code>All</code> можуть застосовуватись до усіх збігів,
+а не лише - до першого. Приклад знаходження усіх збігів.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">FindAllString</span><span class="p">(</span><span class="s">&quot;peach punch pinch&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Варіації <code>All</code> також доступний і іншим методам (наприклад
+тим, що ми вже бачили).</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">FindAllStringSubmatchIndex</span><span class="p">(</span>
+        <span class="s">&quot;peach punch pinch&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Другий аргумент (заданий додатнім цілим числом), допомагає
+обмежити кількість збігів.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">FindAllString</span><span class="p">(</span><span class="s">&quot;peach punch pinch&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Приклади що ми розглянули, отримують аргумент типу рядок і
+використовують імя на кшталт <code>MatchString</code>, але ми також можемо
+передати зріз байтів - <code>[]byte</code> (та прибрати <code>String</code>
+з імені методу) і отримаємо аналогічний метод, що буде
+працювати із зрізами байтів.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">Match</span><span class="p">([]</span><span class="nb">byte</span><span class="p">(</span><span class="s">&quot;peach&quot;</span><span class="p">)))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Створюючи константи regexp&rsquo;ів - ви можете
+використати метод <code>MustCompile</code>, замість <code>Compile</code>.
+Простий <code>Compile</code> не працює з константами - оскільки повертає
+два значення, a <code>MustCompile</code> <a href="./panic">панікує</a> у разі проблеми
+що робить його безпечним для використання під час компіляції.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">r</span> <span class="p">=</span> <span class="nx">regexp</span><span class="p">.</span><span class="nx">MustCompile</span><span class="p">(</span><span class="s">&quot;p([a-z]+)ch&quot;</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">r</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Пакет <code>regexp</code> можна використовувати для заміни часткових
+збігів рядків іншими значеннями.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">r</span><span class="p">.</span><span class="nx">ReplaceAllString</span><span class="p">(</span><span class="s">&quot;a peach&quot;</span><span class="p">,</span> <span class="s">&quot;&lt;fruit&gt;&quot;</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Варіація  методів <code>Func</code> дозволяє трансформувати текст за допомогою функції аргументу.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre>    <span class="nx">in</span> <span class="o">:=</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="s">&quot;a peach&quot;</span><span class="p">)</span>
+    <span class="nx">out</span> <span class="o">:=</span> <span class="nx">r</span><span class="p">.</span><span class="nx">ReplaceAllFunc</span><span class="p">(</span><span class="nx">in</span><span class="p">,</span> <span class="nx">bytes</span><span class="p">.</span><span class="nx">ToUpper</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">out</span><span class="p">))</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go run regular-expressions.go
+<span class="go">true</span>
+<span class="go">true</span>
+<span class="go">peach</span>
+<span class="go">[0 5]</span>
+<span class="go">[peach ea]</span>
+<span class="go">[0 5 1 3]</span>
+<span class="go">[peach punch pinch]</span>
+<span class="go">[[0 5 1 3] [6 11 7 9] [12 17 13 15]]</span>
+<span class="go">[peach punch]</span>
+<span class="go">true</span>
+<span class="go">p([a-z]+)ch</span>
+<span class="go">a &lt;fruit&gt;</span>
+<span class="go">a PEACH</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Радимо, зачінити документацію пакету <a href="http://golang.org/pkg/regexp/"><code>regexp</code></a>.</p>
+</td>
+			<td class="code empty">
+			
+			
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+	<p class="next">
+		Наступний приклад: <a href="json.html">JSON</a>.
+	</p>
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/regular-expressions">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import (\u000A    \"bytes\"\u000A    \"fmt\"\u000A    \"regexp\"\u000A)\u000A');codeLines.push('func main() {\u000A');codeLines.push('    match, _ := regexp.MatchString(\"p([a-z]+)ch\", \"peach\")\u000A    fmt.Println(match)\u000A');codeLines.push('    r, _ := regexp.Compile(\"p([a-z]+)ch\")\u000A');codeLines.push('    fmt.Println(r.MatchString(\"peach\"))\u000A');codeLines.push('    fmt.Println(r.FindString(\"peach punch\"))\u000A');codeLines.push('    fmt.Println(r.FindStringIndex(\"peach punch\"))\u000A');codeLines.push('    fmt.Println(r.FindStringSubmatch(\"peach punch\"))\u000A');codeLines.push('    fmt.Println(r.FindStringSubmatchIndex(\"peach punch\"))\u000A');codeLines.push('    fmt.Println(r.FindAllString(\"peach punch pinch\", -1))\u000A');codeLines.push('    fmt.Println(r.FindAllStringSubmatchIndex(\u000A        \"peach punch pinch\", -1))\u000A');codeLines.push('    fmt.Println(r.FindAllString(\"peach punch pinch\", 2))\u000A');codeLines.push('    fmt.Println(r.Match([]byte(\"peach\")))\u000A');codeLines.push('    r = regexp.MustCompile(\"p([a-z]+)ch\")\u000A    fmt.Println(r)\u000A');codeLines.push('    fmt.Println(r.ReplaceAllString(\"a peach\", \"\x3Cfruit\x3E\"))\u000A');codeLines.push('    in := []byte(\"a peach\")\u000A    out := r.ReplaceAllFunc(in, bytes.ToUpper)\u000A    fmt.Println(string(out))\u000A}\u000A');codeLines.push('');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>

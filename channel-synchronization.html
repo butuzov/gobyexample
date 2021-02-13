@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: Синхронізація каналу</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'channel-buffering.html';
+		}
+	
+	
+		if (e.key == "ArrowRight") {
+			window.location.href = 'channel-directions.html';
+		}
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="channel-synchronization">
+	<h2><a href="./">Go за Прикладом</a>: Синхронізація каналу</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Основне застосування каналів - синхронізація між горутинами.
+Скористаємось властивістю каналів до блокування, щоб зачекати
+завершення роботи горутини. Якщо ви чекаєте завершення
+роботи кількох горутин - спробуйте <a href="waitgroups">WaitGroup</a>.</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/-TdYIjuI1Bt"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;time&quot;</span>
+<span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ця функція буде запущена в горутині. Канал <code>done</code>
+буде використано для надсилання повідомлення головній
+горутині про завершення роботи поточного функціоналу.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">worker</span><span class="p">(</span><span class="nx">done</span> <span class="kd">chan</span> <span class="kt">bool</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Print</span><span class="p">(</span><span class="s">&quot;працюємо...&quot;</span><span class="p">)</span>
+    <span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;готово&quot;</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Надсилаємо повідомлення про завершення роботи.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">done</span> <span class="o">&lt;-</span> <span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Створимо канал <code>done</code> і запускаємо горутину <code>worker</code>,
+виділивши цей канал їй для комунікації.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">done</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">bool</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">go</span> <span class="nx">worker</span><span class="p">(</span><span class="nx">done</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Чекаємо повідомлення про завершення роботи <code>worker</code>&lsquo;a,
+з каналу до якого ми передали повідомлення.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="o">&lt;-</span><span class="nx">done</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code">
+			
+			<div class="highlight"><pre><span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Якщо ви приберете <code>&lt;- done</code> з коду,
+то програма завершиться, ще до того як <code>worker</code>
+буде запущено.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go run channel-synchronization.go
+<span class="go">працюємо...готово</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+	<p class="next">
+		Наступний приклад: <a href="channel-directions.html">Напрямки каналу</a>.
+	</p>
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/channel-synchronization">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import (\u000A    \"fmt\"\u000A    \"time\"\u000A)\u000A');codeLines.push('func worker(done chan bool) {\u000A    fmt.Print(\"працюємо...\")\u000A    time.Sleep(time.Second)\u000A    fmt.Println(\"готово\")\u000A');codeLines.push('    done \x3C- true\u000A}\u000A');codeLines.push('func main() {\u000A');codeLines.push('    done := make(chan bool, 1)\u000A    go worker(done)\u000A');codeLines.push('    \x3C-done\u000A');codeLines.push('}\u000A');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>

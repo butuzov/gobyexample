@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+
+	<script>
+	onkeydown = (e) => {
+		if (e.key == "ArrowRight") {
+			window.location.href = './hello-world.html';
+		}
+	}
+  </script>
+
+</head>
+<body>
+	<div id="intro">
+	<h2><a href="./">Go за Прикладом</a></h2>
+	<p>
+		<a href="http://golang.org">Go</a> є мовою програмування з відкритим кодом призначена для створення простого, швидкого та надійного програмного забезпечення.
+	</p>
+
+	<p>
+		<em>Go за Прикладом</em> це практичне введення до Go з використанням анотованих пракладів. Перевірте приклад <a href="./hello-world.html">"Привіт Світ"</a> aбо скористайтесь поданим нижче переліком прикладів.
+	</p>
+
+	<ul>
+		
+		<li><a href="hello-world.html">Привіт Світе (Hello World)</a></li>
+		
+		<li><a href="values.html">Значення (Values)</a></li>
+		
+		<li><a href="variables.html">Змінні (Variables)</a></li>
+		
+		<li><a href="constants.html">Константи (Constants)</a></li>
+		
+		<li><a href="for.html">Цикли (For)</a></li>
+		
+		<li><a href="if-else.html">Оператори Розгалуження - Якщо/Інакше (If/Else)</a></li>
+		
+		<li><a href="switch.html">Оператори Розгалуження - Перемикач (Switch)</a></li>
+		
+		<li><a href="arrays.html">Масиви (Arrays)</a></li>
+		
+		<li><a href="slices.html">Зрізи (Slices)</a></li>
+		
+		<li><a href="maps.html">Мапи (Maps)</a></li>
+		
+		<li><a href="range.html">Діапазон (Range)</a></li>
+		
+		<li><a href="functions.html">Функції (Functions)</a></li>
+		
+		<li><a href="multiple-return-values.html">Поверненння Кількох Значень (Multiple Return Values)</a></li>
+		
+		<li><a href="variadic-functions.html">Варіативні Функції (Variadic Functions)</a></li>
+		
+		<li><a href="closures.html">Замикання (Closures)</a></li>
+		
+		<li><a href="recursion.html">Рекурсія (Recursion)</a></li>
+		
+		<li><a href="pointers.html">Вказівники (Pointers)</a></li>
+		
+		<li><a href="structs.html">Структури (Structs)</a></li>
+		
+		<li><a href="methods.html">Методи (Methods)</a></li>
+		
+		<li><a href="interfaces.html">Інтерфейси (Interfaces)</a></li>
+		
+		<li><a href="errors.html">Помилки (Errors)</a></li>
+		
+		<li><a href="goroutines.html">Горутини (Goroutines)</a></li>
+		
+		<li><a href="channels.html">Канали (Channels)</a></li>
+		
+		<li><a href="channel-buffering.html">Буферизація каналiв (Channel Buffering)</a></li>
+		
+		<li><a href="channel-synchronization.html">Синхронізація каналу</a></li>
+		
+		<li><a href="channel-directions.html">Напрямки каналу</a></li>
+		
+		<li><a href="select.html">Select</a></li>
+		
+		<li><a href="timeouts.html">Тайм-аути (Timeouts)</a></li>
+		
+		<li><a href="non-blocking-channel-operations.html">Не Блокуючі Операції на Каналах</a></li>
+		
+		<li><a href="closing-channels.html">Закриття каналів</a></li>
+		
+		<li><a href="range-over-channels.html">Діапазон (Range) з Каналами</a></li>
+		
+		<li><a href="timers.html">Хронометри (Timers)</a></li>
+		
+		<li><a href="tickers.html">Маятники (Tickers)</a></li>
+		
+		<li><a href="worker-pools.html">Worker Pools</a></li>
+		
+		<li><a href="rate-limiting.html">Обмеження Частоти Запитів</a></li>
+		
+		<li><a href="atomic-counters.html">Атомарні Лічильники</a></li>
+		
+		<li><a href="waitgroups.html">Групи Очікування (WaitGroups)</a></li>
+		
+		<li><a href="mutexes.html">Взаємні Виключення (Mutexes)</a></li>
+		
+		<li><a href="stateful-goroutines.html">Stateful Goroutines</a></li>
+		
+		<li><a href="sorting.html">Сортування</a></li>
+		
+		<li><a href="sorting-by-functions.html">Сортування функціями</a></li>
+		
+		<li><a href="panic.html">Паніка (Panic)</a></li>
+		
+		<li><a href="defer.html">Відкладення (Defer)</a></li>
+		
+		<li><a href="recover.html">Відновлення (Recover)</a></li>
+		
+		<li><a href="collection-functions.html">Функцій для роботи з колекціями</a></li>
+		
+		<li><a href="string-functions.html">Рядкові Функції</a></li>
+		
+		<li><a href="string-formatting.html">Форматування Рядків</a></li>
+		
+		<li><a href="regular-expressions.html">Регулярні Вирази</a></li>
+		
+		<li><a href="json.html">JSON</a></li>
+		
+		<li><a href="xml.html">XML</a></li>
+		
+		<li><a href="time.html">Час</a></li>
+		
+		<li><a href="epoch.html">Epoch</a></li>
+		
+		<li><a href="time-formatting-parsing.html">Форматування Часу</a></li>
+		
+		<li><a href="random-numbers.html">Генерація випадкових чисел</a></li>
+		
+		<li><a href="number-parsing.html">Конвертація Тексту в Числа</a></li>
+		
+		<li><a href="url-parsing.html">Розбір URL</a></li>
+		
+		<li><a href="sha1-hashes.html">SHA1 Хеші</a></li>
+		
+		<li><a href="base64-encoding.html">Кодування Base64</a></li>
+		
+		<li><a href="reading-files.html">Читання файлів</a></li>
+		
+		<li><a href="writing-files.html">Запис файлів</a></li>
+		
+		<li><a href="line-filters.html">Рядкові Фільтри</a></li>
+		
+		<li><a href="file-paths.html">Файлові Шляхи</a></li>
+		
+		<li><a href="directories.html">Директорії</a></li>
+		
+		<li><a href="temporary-files-and-directories.html">Тимчасові Файли та Директорії</a></li>
+		
+		<li><a href="testing.html">Тестування</a></li>
+		
+		<li><a href="command-line-arguments.html">Командний Рядок - Аргументи</a></li>
+		
+		<li><a href="command-line-flags.html">Командний Рядок - Перемикачі</a></li>
+		
+		<li><a href="command-line-subcommands.html">Командний Рядок - Під Команди</a></li>
+		
+		<li><a href="environment-variables.html">Змінні середовища</a></li>
+		
+		<li><a href="http-clients.html">HTTP Клієнти</a></li>
+		
+		<li><a href="http-servers.html">HTTP Сервери</a></li>
+		
+		<li><a href="context.html">Context</a></li>
+		
+		<li><a href="spawning-processes.html">Запуск сторонніх процесів</a></li>
+		
+		<li><a href="execing-processes.html">Заміна поточного процесу новим</a></li>
+		
+		<li><a href="signals.html">Сигнали</a></li>
+		
+		<li><a href="exit.html">Exit</a></li>
+		
+	</ul>
+
+		<p class="footer">
+		Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/">source</a> | <a href="https://github.com/butuzov/gobyexample#ліцензія">ліцензія</a>
+		</p>
+	</div>
+</body>
+</html>

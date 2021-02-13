@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: Сигнали</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'execing-processes.html';
+		}
+	
+	
+		if (e.key == "ArrowRight") {
+			window.location.href = 'exit.html';
+		}
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="signals">
+	<h2><a href="./">Go за Прикладом</a>: Сигнали</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Інколи виникає необхідність реагувати на
+<a href="https://uk.wikipedia.org/wiki/Сигнал_(операційні_системи)">Сигнали операційної системи (Unix)</a>
+не так, як задумано. Це буває корисно наприклад у випадках, коли потрібно
+щоб сервер обережно завершив свою роботу по отриманні сигналу <code>SIGTERM</code>,
+або програма що працює з командним рядком зупинили обробку вводу - по отриманні<code>SIGINT</code>.</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/zl11moliUv4"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;os&quot;</span>
+    <span class="s">&quot;os/signal&quot;</span>
+    <span class="s">&quot;syscall&quot;</span>
+<span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Нотифікації сигналів у Go працюють за допомогою передачі
+значення <code>os.Signal</code> через канал. Ми створимо канал для
+отримання таких повідомлень, ми також створимо ще один канал
+для повідомлення про завершення програми.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">sigs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Signal</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="nx">done</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">bool</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p><code>signal.Notify</code> реєструє зазначений канал для отримання
+повідомлень переданих сигналів. Як тільки таккий сигнал
+ буде зареєстровано - він буде переданий в канал.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">signal</span><span class="p">.</span><span class="nx">Notify</span><span class="p">(</span><span class="nx">sigs</span><span class="p">,</span> <span class="nx">syscall</span><span class="p">.</span><span class="nx">SIGINT</span><span class="p">,</span> <span class="nx">syscall</span><span class="p">.</span><span class="nx">SIGTERM</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ця горутинка - виконає блокування поки не буде отримано
+сигнал з каналу. Як тільки такий сигнал буде їй передано -
+вона виведе повідомлення і повідомить програму, що їй пора
+завершуватись.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">sig</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">sigs</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">()</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">sig</span><span class="p">)</span>
+        <span class="nx">done</span> <span class="o">&lt;-</span> <span class="kc">true</span>
+    <span class="p">}()</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Програми чекатиме тут допоки вона не отримає очікуваний
+сигнал (як визначено горутинкою вище - що має надіслати в
+<code>done</code> значення), після чого вона завершить роботу.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;awaiting signal&quot;</span><span class="p">)</span>
+    <span class="o">&lt;-</span><span class="nx">done</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;exiting&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Як тільки ми запустимо цю програму вона &ldquo;заблокується&rdquo;
+і буде очікувати сигнал. Натискаючи <code>ctrl-C</code>
+(який показано тут як <code>^C</code>) ми передамо сигнал <code>SIGINT</code>,
+що змусить програму надрукувати <code>interrupt</code> і завершити роботу.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go run signals.go
+<span class="go">awaiting signal</span>
+<span class="go">^C</span>
+<span class="go">interrupt</span>
+<span class="go">exiting</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+	<p class="next">
+		Наступний приклад: <a href="exit.html">Exit</a>.
+	</p>
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/signals">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import (\u000A    \"fmt\"\u000A    \"os\"\u000A    \"os/signal\"\u000A    \"syscall\"\u000A)\u000A');codeLines.push('func main() {\u000A');codeLines.push('    sigs := make(chan os.Signal, 1)\u000A    done := make(chan bool, 1)\u000A');codeLines.push('    signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)\u000A');codeLines.push('    go func() {\u000A        sig := \x3C-sigs\u000A        fmt.Println()\u000A        fmt.Println(sig)\u000A        done \x3C- true\u000A    }()\u000A');codeLines.push('    fmt.Println(\"awaiting signal\")\u000A    \x3C-done\u000A    fmt.Println(\"exiting\")\u000A}\u000A');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: Форматування Рядків</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'string-functions.html';
+		}
+	
+	
+		if (e.key == "ArrowRight") {
+			window.location.href = 'regular-expressions.html';
+		}
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="string-formatting">
+	<h2><a href="./">Go за Прикладом</a>: Форматування Рядків</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>В Go реалізована хороша підтримка строкового форматування
+( традиційно таке форматування слідує канонам мови
+програмування <a href="https://en.wikipedia.org/wiki/Printf_format_string"><code>С</code></a> ).
+Розглянемо найбільш часто вживані приклади строкового форматування.</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/Y7p8ujSuUCl"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;os&quot;</span>
+<span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">type</span> <span class="nx">point</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Працюючи з форматуванням рядків ми спершу маємо зрозуміти
+поняття &ldquo;дієслова&rdquo;, яким є спеціалізований ключ або комбінація
+ключів. Такі ключі вживаються для заміни/перетворення значення в
+рядку. Наприклад, <code>%v</code> дозволяє сформувати та надрукувати приклад
+нашої структури <code>point</code>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">p</span> <span class="o">:=</span> <span class="nx">point</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">}</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%v\n&quot;</span><span class="p">,</span> <span class="nx">p</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Якщо значення є структурою, <code>%+v</code>варіація покаже її поля.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%+v\n&quot;</span><span class="p">,</span> <span class="nx">p</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Варіація <code>%#v</code> відформатує відображення значення синтаксисом Go,
+включаючи код який продукуватиме це значення.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%#v\n&quot;</span><span class="p">,</span> <span class="nx">p</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Тип значення можна отримати за допомогою дієслова <code>%T</code>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%T\n&quot;</span><span class="p">,</span> <span class="nx">p</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Форматування логічного типу даних (<code>bool</code>) простіше-простого.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%t\n&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Існує багато варіцій форматування для цілих чисел.
+Використання <code>%d</code> призведе до стандартного - десятичного форматування.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%d\n&quot;</span><span class="p">,</span> <span class="mi">123</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Так наприклад відображувати значення у двійковій системі числення.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%b\n&quot;</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Код <code>%c</code> надрукує відповідний числу (ascii) символ.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%c\n&quot;</span><span class="p">,</span> <span class="mi">33</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p><code>%x</code> надасть відображення в шіснадцятковій системі числення.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%x\n&quot;</span><span class="p">,</span> <span class="mi">456</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Також є кілька налаштувань для форматування чисел з плаваючою
+комою. Найбільш базовим з нах є <code>%f</code>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%f\n&quot;</span><span class="p">,</span> <span class="mf">78.9</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p><code>%e</code> та <code>%E</code> форматують число з плаваючою комою
+у кількох різних варіантах <a href="https://uk.wikipedia.org/wiki/Експоненціальний_запис">експоненціального (або, як його ще називають, &ldquo;наукового&rdquo;)</a> запису.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%e\n&quot;</span><span class="p">,</span> <span class="mf">123400000.0</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%E\n&quot;</span><span class="p">,</span> <span class="mf">123400000.0</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Базове відобряження рядків <code>%s</code>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%s\n&quot;</span><span class="p">,</span> <span class="s">&quot;\&quot;рядок\&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Для подвійної екранізацій рядків скористайтесь <code>%q</code>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%q\n&quot;</span><span class="p">,</span> <span class="s">&quot;\&quot;рядок\&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Так само, як і з цілими числами, <code>%x</code> трансформує
+рядок у шістнадцяткове відображення, з друком двох символів
+на байт вхідного параметру.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%x\n&quot;</span><span class="p">,</span> <span class="s">&quot;лишенько!&quot;</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Щоб надрукувати адресу пам&rsquo;яті вказівника
+(а так відображаються вказівники) використайте <code>%p</code>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%p\n&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">p</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Коли форматуєте рядки - вам інколи необхідно буде контролювати
+точність та довжину фінального &ldquo;числа&rdquo;. Щоб вказати довжину
+цілого числа, скористайтесь числом після символа <code>%</code> у дієслові.
+За стандартними налаштуваннями результатом буде вирівняне
+по правій стороні і відбите пробілами число.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;|%6d|%6d|\n&quot;</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">345</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ви такою можете вказати довжину чисел після коми для
+десяткових чисел, хоча зазвичай вам також знадобиться
+обмежити точність обрахунку числа після коми водночас до
+точності кількості знаків.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;|%6.2f|%6.2f|\n&quot;</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Для вирівнювання вліво, скористайтесь прапорцем <code>-</code> після <code>%</code>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;|%-6.2f|%-6.2f|\n&quot;</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">3.45</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Можливо вам забажається відформатувати не тільки числа,
+а й рядок схожим чином, наприклад, для положення в табличному
+виводі. Вирівняти по правій стороні можна наступним чином.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;|%6s|%6s|\n&quot;</span><span class="p">,</span> <span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="s">&quot;b&quot;</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Вирівняти по лівій стороні можна за допомогою, вже
+знайомого нам за попереднім прикладом з числам, прапорцем <code>-</code>,
+що ставиться після <code>%</code>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;|%-6s|%-6s|\n&quot;</span><span class="p">,</span> <span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="s">&quot;b&quot;</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Допоки ми бачили <code>Printf</code>, що друкує форматовану рядок
+до <code>os.Stdout</code>. <code>Sprintf</code> сформує та поверне рядок без
+його друку.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">s</span> <span class="o">:=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Sprintf</span><span class="p">(</span><span class="s">&quot;це %s&quot;</span><span class="p">,</span> <span class="s">&quot;рядок&quot;</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ви можете сформувати та надрукувати до <code>io.Writers</code>
+(на противагу <code>os.Stdout</code> в яке проходить друк з Printf)
+скориставшись <code>Fprintf</code>.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Fprintf</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Stderr</span><span class="p">,</span> <span class="s">&quot;ой %s\n&quot;</span><span class="p">,</span> <span class="s">&quot;халепа&quot;</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"></td>
+			<td class="code">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go run string-formatting.go
+<span class="go">{1 2}</span>
+<span class="go">{x:1 y:2}</span>
+<span class="go">main.point{x:1, y:2}</span>
+<span class="go">main.point</span>
+<span class="go">true</span>
+<span class="go">123</span>
+<span class="go">1110</span>
+<span class="go">!</span>
+<span class="go">1c8</span>
+<span class="go">78.900000</span>
+<span class="go">1.234000e+08</span>
+<span class="go">1.234000E+08</span>
+<span class="go">&quot;рядок&quot;</span>
+<span class="go">&quot;\&quot;рядок\&quot;&quot;</span>
+<span class="go">d0bbd0b8d188d0b5d0bdd18cd0bad0be21</span>
+<span class="go">0xc0000160b0</span>
+<span class="go">|    12|   345|</span>
+<span class="go">|  1.20|  3.45|</span>
+<span class="go">|1.20  |3.45  |</span>
+<span class="go">|   foo|     b|</span>
+<span class="go">|foo   |b     |</span>
+<span class="go">це рядок</span>
+<span class="go">ой халепа</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+	<p class="next">
+		Наступний приклад: <a href="regular-expressions.html">Регулярні Вирази</a>.
+	</p>
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/string-formatting">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import (\u000A    \"fmt\"\u000A    \"os\"\u000A)\u000A');codeLines.push('type point struct {\u000A    x, y int\u000A}\u000A');codeLines.push('func main() {\u000A');codeLines.push('    p := point{1, 2}\u000A    fmt.Printf(\"%v\\n\", p)\u000A');codeLines.push('    fmt.Printf(\"%+v\\n\", p)\u000A');codeLines.push('    fmt.Printf(\"%#v\\n\", p)\u000A');codeLines.push('    fmt.Printf(\"%T\\n\", p)\u000A');codeLines.push('    fmt.Printf(\"%t\\n\", true)\u000A');codeLines.push('    fmt.Printf(\"%d\\n\", 123)\u000A');codeLines.push('    fmt.Printf(\"%b\\n\", 14)\u000A');codeLines.push('    fmt.Printf(\"%c\\n\", 33)\u000A');codeLines.push('    fmt.Printf(\"%x\\n\", 456)\u000A');codeLines.push('    fmt.Printf(\"%f\\n\", 78.9)\u000A');codeLines.push('    fmt.Printf(\"%e\\n\", 123400000.0)\u000A    fmt.Printf(\"%E\\n\", 123400000.0)\u000A');codeLines.push('    fmt.Printf(\"%s\\n\", \"\\\"рядок\\\"\")\u000A');codeLines.push('    fmt.Printf(\"%q\\n\", \"\\\"рядок\\\"\")\u000A');codeLines.push('    fmt.Printf(\"%x\\n\", \"лишенько!\")\u000A');codeLines.push('    fmt.Printf(\"%p\\n\", &p)\u000A');codeLines.push('    fmt.Printf(\"|%6d|%6d|\\n\", 12, 345)\u000A');codeLines.push('    fmt.Printf(\"|%6.2f|%6.2f|\\n\", 1.2, 3.45)\u000A');codeLines.push('    fmt.Printf(\"|%-6.2f|%-6.2f|\\n\", 1.2, 3.45)\u000A');codeLines.push('    fmt.Printf(\"|%6s|%6s|\\n\", \"foo\", \"b\")\u000A');codeLines.push('    fmt.Printf(\"|%-6s|%-6s|\\n\", \"foo\", \"b\")\u000A');codeLines.push('    s := fmt.Sprintf(\"це %s\", \"рядок\")\u000A    fmt.Println(s)\u000A');codeLines.push('    fmt.Fprintf(os.Stderr, \"ой %s\\n\", \"халепа\")\u000A}\u000A');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>

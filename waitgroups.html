@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: Групи Очікування (WaitGroups)</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'atomic-counters.html';
+		}
+	
+	
+		if (e.key == "ArrowRight") {
+			window.location.href = 'mutexes.html';
+		}
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="waitgroups">
+	<h2><a href="./">Go за Прикладом</a>: Групи Очікування (WaitGroups)</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Щоб очікувати на закінчення роботи кількох горутин,
+ми можемо скористатись <em>групою очікування</em>.</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/68tWl1Yu2E8"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;sync&quot;</span>
+    <span class="s">&quot;time&quot;</span>
+<span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Це функція, яку ми виконаємо в кожній горутині.
+Зауважте, що WaitGroup має бути передано до функції - як вказівник.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">worker</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">wg</span> <span class="o">*</span><span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span><span class="p">)</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Дамо знати групі очікування, що горутина відпрацювала.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nx">Done</span><span class="p">()</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;Воркер %d стартує\n&quot;</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Імітуємо деяку важку роботу.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;Воркер %d завершено\n&quot;</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ми скористаємось <code>WaitGroup</code> для очікування результату роботи
+усіх горутин.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">wg</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Збільшимо лічильник Групи Очікування для кожної запущеної
+горутинки.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="nx">wg</span><span class="p">.</span><span class="nx">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">go</span> <span class="nx">worker</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">wg</span><span class="p">)</span>
+    <span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Група Очікування блокує виконання до моменту поки лічильник
+знову не буде відкатане до позначки 0.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre>    <span class="nx">wg</span><span class="p">.</span><span class="nx">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Порядок старту та завершення, скоріше за все, буде іншим.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go run waitgroups.go
+<span class="go">Воркер 5 стартує</span>
+<span class="go">Воркер 1 стартує</span>
+<span class="go">Воркер 3 стартує</span>
+<span class="go">Воркер 4 стартує</span>
+<span class="go">Воркер 2 стартує</span>
+<span class="go">Воркер 5 завершено</span>
+<span class="go">Воркер 1 завершено</span>
+<span class="go">Воркер 2 завершено</span>
+<span class="go">Воркер 3 завершено</span>
+<span class="go">Воркер 4 завершено</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+	<p class="next">
+		Наступний приклад: <a href="mutexes.html">Взаємні Виключення (Mutexes)</a>.
+	</p>
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/waitgroups">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import (\u000A    \"fmt\"\u000A    \"sync\"\u000A    \"time\"\u000A)\u000A');codeLines.push('func worker(id int, wg *sync.WaitGroup) {\u000A');codeLines.push('    defer wg.Done()\u000A');codeLines.push('    fmt.Printf(\"Воркер %d стартує\\n\", id)\u000A');codeLines.push('    time.Sleep(time.Second)\u000A    fmt.Printf(\"Воркер %d завершено\\n\", id)\u000A}\u000A');codeLines.push('func main() {\u000A');codeLines.push('    var wg sync.WaitGroup\u000A');codeLines.push('    for i := 1; i \x3C= 5; i++ {\u000A        wg.Add(1)\u000A        go worker(i, &wg)\u000A    }\u000A');codeLines.push('    wg.Wait()\u000A}\u000A');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>

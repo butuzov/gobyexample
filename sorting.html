@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: Сортування</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'stateful-goroutines.html';
+		}
+	
+	
+		if (e.key == "ArrowRight") {
+			window.location.href = 'sorting-by-functions.html';
+		}
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="sorting">
+	<h2><a href="./">Go за Прикладом</a>: Сортування</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Пакет <code>sort</code> реалізує сортування для вбудованих
+та визначених користувачами типів. Спочатку познайомимось з
+сортуванням вбудованих типів.</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/3WytHC-S4QI"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;sort&quot;</span>
+<span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ось один з прикладів роботи GO з вбудованими типами -
+сортування рядків. Зауважте що сортування проходить
+&ldquo;на місці&rdquo;, тобто сортування проходитиме на переданому
+зрізі, а новий не створюється і не повертається.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">strs</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&quot;c&quot;</span><span class="p">,</span> <span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="s">&quot;b&quot;</span><span class="p">}</span>
+    <span class="nx">sort</span><span class="p">.</span><span class="nx">Strings</span><span class="p">(</span><span class="nx">strs</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Рядки:      &quot;</span><span class="p">,</span> <span class="nx">strs</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Сортування цілих чисел - не дуже відрізняється від
+сортування рядків.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">ints</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">}</span>
+    <span class="nx">sort</span><span class="p">.</span><span class="nx">Ints</span><span class="p">(</span><span class="nx">ints</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Цілі числа: &quot;</span><span class="p">,</span> <span class="nx">ints</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ми, також, можемо використати <code>sort</code> щоб перевірити
+чи зріз вже відсортований.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre>    <span class="nx">s</span> <span class="o">:=</span> <span class="nx">sort</span><span class="p">.</span><span class="nx">IntsAreSorted</span><span class="p">(</span><span class="nx">ints</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Відсортовано:  &quot;</span><span class="p">,</span> <span class="nx">s</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Запуск нашої програми призведе до виводу сортованих зрізів
+рядків та цілих чисел, та <code>true</code> як результат виконання
+перевірки на відсортованість зрізу методом <code>IntsAreSorted</code>.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go run sorting.go
+<span class="go">Рядки:       [a b c]</span>
+<span class="go">Цілі числа:  [2 4 7]</span>
+<span class="go">Сортовано:   true</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+	<p class="next">
+		Наступний приклад: <a href="sorting-by-functions.html">Сортування функціями</a>.
+	</p>
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/sorting">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import (\u000A    \"fmt\"\u000A    \"sort\"\u000A)\u000A');codeLines.push('func main() {\u000A');codeLines.push('    strs := []string{\"c\", \"a\", \"b\"}\u000A    sort.Strings(strs)\u000A    fmt.Println(\"Рядки:      \", strs)\u000A');codeLines.push('    ints := []int{7, 2, 4}\u000A    sort.Ints(ints)\u000A    fmt.Println(\"Цілі числа: \", ints)\u000A');codeLines.push('    s := sort.IntsAreSorted(ints)\u000A    fmt.Println(\"Відсортовано:  \", s)\u000A}\u000A');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>

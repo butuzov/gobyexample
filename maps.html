@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: Мапи (Maps)</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'slices.html';
+		}
+	
+	
+		if (e.key == "ArrowRight") {
+			window.location.href = 'range.html';
+		}
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="maps">
+	<h2><a href="./">Go за Прикладом</a>: Мапи (Maps)</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p><em>Мапи</em> це <a href="http://en.wikipedia.org/wiki/Associative_array">асоційований тип даних</a> в Go
+(в інших мовах програмування, такі структури даних ще називають: <em>хеш таблиця</em> або <em>словник</em>).</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/26GLYhJC6O1"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Скориставшись функцією <a href="./slices"><code>make</code></a>:
+<code>make(map[key-type]val-type)</code>, ми ініціюємо створення мапи.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">m</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Задати/Створити значенням можна за допомогою,
+вже знайомого, синтаксису доступу за індексом,
+де індекс це <code>ключ</code>,
+наприклад - <nobr><code>name[key] = val</code><nobr>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">m</span><span class="p">[</span><span class="s">&quot;k1&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">7</span>
+    <span class="nx">m</span><span class="p">[</span><span class="s">&quot;k2&quot;</span><span class="p">]</span> <span class="p">=</span> <span class="mi">13</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Друкуючи мапу з <code>fmt.Println</code> ми побачимо усі існуючи
+пари ключ/значення, які належить мапі.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;map:&quot;</span><span class="p">,</span> <span class="nx">m</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Отримати значення за ключем можна звернувшись до
+мапи за індексом <code>name[key]</code>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">v1</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">[</span><span class="s">&quot;k1&quot;</span><span class="p">]</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;v1: &quot;</span><span class="p">,</span> <span class="nx">v1</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Функція <code>len</code> повертає кількість пар у мапі.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;len:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nx">m</span><span class="p">))</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Функція <code>delete</code> видаляє пару ключ/значення з мапи.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nb">delete</span><span class="p">(</span><span class="nx">m</span><span class="p">,</span> <span class="s">&quot;k2&quot;</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;map:&quot;</span><span class="p">,</span> <span class="nx">m</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Необов&rsquo;язкове друге значення, отримане під час запиту значення
+за ключем з мапи, покаже чи присутній даний ключ в мапі.
+Це стає в нагоді для перевірки існування ключів ( особливо
+ключів <em>з нульовим значенням</em> (наприклад <code>0</code> або <code>&quot;&quot;</code>)).
+В цьому прикладі перевірки існування, нам непотрібно значення,
+а отже, ми ігноруємо його за допомогою <em>пустого ідентифікатора</em> <code>_</code>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">_</span><span class="p">,</span> <span class="nx">prs</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">[</span><span class="s">&quot;k2&quot;</span><span class="p">]</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;prs:&quot;</span><span class="p">,</span> <span class="nx">prs</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Використовуючи наступний синтаксис ми можемо ініціалізувати мапу
+одним рядком.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre>    <span class="nx">n</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="s">&quot;foo&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&quot;bar&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;map:&quot;</span><span class="p">,</span> <span class="nx">n</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Зауважте, що мапи відображаються у вигляді
+<nobr><code>map[k:v k:v]</code></nobr>, коли друкуються <code>fmt.Println</code>.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go run maps.go
+<span class="go">map: map[k1:7 k2:13]</span>
+<span class="go">v1:  7</span>
+<span class="go">len: 2</span>
+<span class="go">map: map[k1:7]</span>
+<span class="go">prs: false</span>
+<span class="go">map: map[bar:2 foo:1]</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+	<p class="next">
+		Наступний приклад: <a href="range.html">Діапазон (Range)</a>.
+	</p>
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/maps">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import \"fmt\"\u000A');codeLines.push('func main() {\u000A');codeLines.push('    m := make(map[string]int)\u000A');codeLines.push('    m[\"k1\"] = 7\u000A    m[\"k2\"] = 13\u000A');codeLines.push('    fmt.Println(\"map:\", m)\u000A');codeLines.push('    v1 := m[\"k1\"]\u000A    fmt.Println(\"v1: \", v1)\u000A');codeLines.push('    fmt.Println(\"len:\", len(m))\u000A');codeLines.push('    delete(m, \"k2\")\u000A    fmt.Println(\"map:\", m)\u000A');codeLines.push('    _, prs := m[\"k2\"]\u000A    fmt.Println(\"prs:\", prs)\u000A');codeLines.push('    n := map[string]int{\"foo\": 1, \"bar\": 2}\u000A    fmt.Println(\"map:\", n)\u000A}\u000A');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>

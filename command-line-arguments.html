@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: Командний Рядок - Аргументи</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'testing.html';
+		}
+	
+	
+		if (e.key == "ArrowRight") {
+			window.location.href = 'command-line-flags.html';
+		}
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="command-line-arguments">
+	<h2><a href="./">Go за Прикладом</a>: Командний Рядок - Аргументи</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p><a href="https://uk.wikipedia.org/wiki/Інтерфейс_командного_рядка#Формат_команди"><em>Аргументи командного рядка</em></a>
+це загальноприйнятий спосіб запуску програм з командним інтерфейсом.
+Наприклад, <code>go run hello.go</code> використовує <code>run</code> та <code>hello.go</code>
+як аргументи для програми <code>go</code>.</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/hfSlJobO7KK"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;os&quot;</span>
+<span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p><code>os.Args</code> надає доступ для незмінених аргументів
+командного рядка. Зауважте що першим значенням у
+цьому зрізі буде шлях до самої програми, а <code>os.Args[1:]</code>
+зберігатиме передані аргументи.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">argsWithProg</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Args</span>
+    <span class="nx">argsWithoutProg</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ви можете отримати значення індивідуальних аргументів
+використовуючи звичайний синтаксис доступа по індексу
+до елементів зрізу.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">arg</span> <span class="o">:=</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code">
+			
+			<div class="highlight"><pre>    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">argsWithProg</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">argsWithoutProg</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">arg</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Для експерементів з аргементами командного рядка,
+спершу скомпілюємо файл за допомогою <code>go build</code>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go build command-line-arguments.go
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Запустимо нашу програму передавши їй якісь аргументи.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="gp">$</span> ./command-line-arguments a b c d
+<span class="go">[./command-line-arguments a b c d]</span>
+<span class="go">[a b c d]</span>
+<span class="go">c</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>У наступному прикладі ми познайомимось з прапорцями - більш
+просунутим концептом передачі параметрів у командному рядку.</p>
+</td>
+			<td class="code empty">
+			
+			
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+	<p class="next">
+		Наступний приклад: <a href="command-line-flags.html">Командний Рядок - Перемикачі</a>.
+	</p>
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/command-line-arguments">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import (\u000A    \"fmt\"\u000A    \"os\"\u000A)\u000A');codeLines.push('func main() {\u000A');codeLines.push('    argsWithProg := os.Args\u000A    argsWithoutProg := os.Args[1:]\u000A');codeLines.push('    arg := os.Args[1]\u000A');codeLines.push('    fmt.Println(argsWithProg)\u000A    fmt.Println(argsWithoutProg)\u000A    fmt.Println(arg)\u000A}\u000A');codeLines.push('');codeLines.push('');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>

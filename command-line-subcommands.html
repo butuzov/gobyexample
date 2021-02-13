@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: Командний Рядок - Під Команди</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'command-line-flags.html';
+		}
+	
+	
+		if (e.key == "ArrowRight") {
+			window.location.href = 'environment-variables.html';
+		}
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="command-line-subcommands">
+	<h2><a href="./">Go за Прикладом</a>: Командний Рядок - Під Команди</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Деякі з утиліт командного рядку, як то <code>go</code> чи <code>git</code>,
+мають великий вибір додаткових команд, а також власний набір
+прапорців/параметрів. Наприклад <code>go build</code> і <code>go get</code>
+являються додатковими командами для <code>go</code>-утиліти.
+Для роботи з прапорцями/параметрами в
+стандартній бібліотеці <code>go</code> є пакет <code>flag</code>, який дозволяє
+з легкістю визначати команди а також їх параметри.</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/qbmbaygXm-G"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;flag&quot;</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;os&quot;</span>
+<span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Тут, за допомогою функції <code>NewFlagSet</code>, визначається нова команда.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fooCmd</span> <span class="o">:=</span> <span class="nx">flag</span><span class="p">.</span><span class="nx">NewFlagSet</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">,</span> <span class="nx">flag</span><span class="p">.</span><span class="nx">ExitOnError</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Далі оголошуються два додаткові параметри <code>enable</code> і <code>name</code>
+з типами ціле и стрічка відповідно.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">fooEnable</span> <span class="o">:=</span> <span class="nx">fooCmd</span><span class="p">.</span><span class="nx">Bool</span><span class="p">(</span><span class="s">&quot;enable&quot;</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="s">&quot;enable&quot;</span><span class="p">)</span>
+    <span class="nx">fooName</span> <span class="o">:=</span> <span class="nx">fooCmd</span><span class="p">.</span><span class="nx">String</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="s">&quot;name&quot;</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Для різних команд можна задати різні параметри,
+які вони підтримують.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="nx">barCmd</span> <span class="o">:=</span> <span class="nx">flag</span><span class="p">.</span><span class="nx">NewFlagSet</span><span class="p">(</span><span class="s">&quot;bar&quot;</span><span class="p">,</span> <span class="nx">flag</span><span class="p">.</span><span class="nx">ExitOnError</span><span class="p">)</span>
+    <span class="nx">barLevel</span> <span class="o">:=</span> <span class="nx">barCmd</span><span class="p">.</span><span class="nx">Int</span><span class="p">(</span><span class="s">&quot;level&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&quot;level&quot;</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Очікується, що параметри будуть передані як перший аргумент при старті програми.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">)</span> <span class="p">&lt;</span> <span class="mi">2</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;expected &#39;foo&#39; or &#39;bar&#39; subcommands&quot;</span><span class="p">)</span>
+        <span class="nx">os</span><span class="p">.</span><span class="nx">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Перевірити, яка команда була передана.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="k">switch</span> <span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Якщо була передана команда <code>foo</code>, виконати парсинг параметрів,
+а також вивести всі параметри які не були задіяні при парсингу вхідної стрічки.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="k">case</span> <span class="s">&quot;foo&quot;</span><span class="p">:</span>
+        <span class="nx">fooCmd</span><span class="p">.</span><span class="nx">Parse</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;subcommand &#39;foo&#39;&quot;</span><span class="p">)</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;  enable:&quot;</span><span class="p">,</span> <span class="o">*</span><span class="nx">fooEnable</span><span class="p">)</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;  name:&quot;</span><span class="p">,</span> <span class="o">*</span><span class="nx">fooName</span><span class="p">)</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;  tail:&quot;</span><span class="p">,</span> <span class="nx">fooCmd</span><span class="p">.</span><span class="nx">Args</span><span class="p">())</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Якщо була передана команда <code>bar</code>, виконати парсинг параметрів,
+а також вивести всі параметри які не були задіяні при парсингу вхідної стрічки.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="k">case</span> <span class="s">&quot;bar&quot;</span><span class="p">:</span>
+        <span class="nx">barCmd</span><span class="p">.</span><span class="nx">Parse</span><span class="p">(</span><span class="nx">os</span><span class="p">.</span><span class="nx">Args</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;subcommand &#39;bar&#39;&quot;</span><span class="p">)</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;  level:&quot;</span><span class="p">,</span> <span class="o">*</span><span class="nx">barLevel</span><span class="p">)</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;  tail:&quot;</span><span class="p">,</span> <span class="nx">barCmd</span><span class="p">.</span><span class="nx">Args</span><span class="p">())</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Якщо команда, що була передана - являється забороненою,
+вивести помилку і закінчити виконання.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre>    <span class="k">default</span><span class="p">:</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;expected &#39;foo&#39; or &#39;bar&#39; subcommands&quot;</span><span class="p">)</span>
+        <span class="nx">os</span><span class="p">.</span><span class="nx">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go build command-line-subcommands.go
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Для початку викликати команду foo.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="gp">$</span> ./command-line-subcommands foo -enable -name<span class="o">=</span>joe a1 a2
+<span class="go">subcommand &#39;foo&#39;</span>
+<span class="go">  enable: true</span>
+<span class="go">  name: joe</span>
+<span class="go">  tail: [a1 a2]</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Тепер викликати команду bar.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="gp">$</span> ./command-line-subcommands bar -level <span class="m">8</span> a1
+<span class="go">subcommand &#39;bar&#39;</span>
+<span class="go">  level: 8</span>
+<span class="go">  tail: [a1]</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Переконатись, що bar не приймає параметри визначенні в foo.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="gp">$</span> ./command-line-subcommands bar -enable a1
+<span class="go">flag provided but not defined: -enable</span>
+<span class="go">Usage of bar:</span>
+<span class="go">  -level int</span>
+<span class="go">        level</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Далі будуть розглянуті змінні середовища,
+ще один поширений спосіб для заданя необхідних параметрів.</p>
+</td>
+			<td class="code empty">
+			
+			
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+	<p class="next">
+		Наступний приклад: <a href="environment-variables.html">Змінні середовища</a>.
+	</p>
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/command-line-subcommands">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import (\u000A    \"flag\"\u000A    \"fmt\"\u000A    \"os\"\u000A)\u000A');codeLines.push('func main() {\u000A');codeLines.push('    fooCmd := flag.NewFlagSet(\"foo\", flag.ExitOnError)\u000A');codeLines.push('    fooEnable := fooCmd.Bool(\"enable\", false, \"enable\")\u000A    fooName := fooCmd.String(\"name\", \"\", \"name\")\u000A');codeLines.push('    barCmd := flag.NewFlagSet(\"bar\", flag.ExitOnError)\u000A    barLevel := barCmd.Int(\"level\", 0, \"level\")\u000A');codeLines.push('    if len(os.Args) \x3C 2 {\u000A        fmt.Println(\"expected \'foo\' or \'bar\' subcommands\")\u000A        os.Exit(1)\u000A    }\u000A');codeLines.push('    switch os.Args[1] {\u000A');codeLines.push('    case \"foo\":\u000A        fooCmd.Parse(os.Args[2:])\u000A        fmt.Println(\"subcommand \'foo\'\")\u000A        fmt.Println(\"  enable:\", *fooEnable)\u000A        fmt.Println(\"  name:\", *fooName)\u000A        fmt.Println(\"  tail:\", fooCmd.Args())\u000A');codeLines.push('    case \"bar\":\u000A        barCmd.Parse(os.Args[2:])\u000A        fmt.Println(\"subcommand \'bar\'\")\u000A        fmt.Println(\"  level:\", *barLevel)\u000A        fmt.Println(\"  tail:\", barCmd.Args())\u000A');codeLines.push('    default:\u000A        fmt.Println(\"expected \'foo\' or \'bar\' subcommands\")\u000A        os.Exit(1)\u000A    }\u000A}\u000A');codeLines.push('');codeLines.push('');codeLines.push('');codeLines.push('');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>

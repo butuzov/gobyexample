@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: Worker Pools</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'tickers.html';
+		}
+	
+	
+		if (e.key == "ArrowRight") {
+			window.location.href = 'rate-limiting.html';
+		}
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="worker-pools">
+	<h2><a href="./">Go за Прикладом</a>: Worker Pools</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Розглянемо реалізацію шаблону
+<em>worker pools</em> використовуючи горутини та канали.
+Вільний переклад &ldquo;wooker pools&rdquo; українською &ldquo;фонд робочої сили&rdquo;,
+але оригінальний термін вживається частіше</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/BLeiz8j0dV4"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&quot;fmt&quot;</span>
+    <span class="s">&quot;time&quot;</span>
+<span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ось приклад, функції-робітника, якою ми скористаємось,
+щоб запустити кілька різних екземплярів <code>робітників</code>. Вони будуть
+отримувати роботу на каналі <code>jobs</code> і надсилати сповіщення
+про завершення роботи до каналу <code>results</code>. Роботою нашого
+&ldquo;працівника&rdquo; буде &ldquo;сон довжиною в секунду&rdquo; (така собі симуляція
+реальної роботи).</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">worker</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">jobs</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">results</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="nx">j</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">jobs</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;працівник&quot;</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="s">&quot;почав проботу&quot;</span><span class="p">,</span> <span class="nx">j</span><span class="p">)</span>
+        <span class="nx">time</span><span class="p">.</span><span class="nx">Sleep</span><span class="p">(</span><span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;працівник&quot;</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="s">&quot;закінчив роботу&quot;</span><span class="p">,</span> <span class="nx">j</span><span class="p">)</span>
+        <span class="nx">results</span> <span class="o">&lt;-</span> <span class="nx">j</span> <span class="o">*</span> <span class="mi">2</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Щоб скористатись &ldquo;worker pool&rdquo; нам необхідно
+створити два канали: в один будемо передавати завдання
+робітнику, а з іншого отримувати результати роботи.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="kd">const</span> <span class="nx">numJobs</span> <span class="p">=</span> <span class="mi">5</span>
+    <span class="nx">jobs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">numJobs</span><span class="p">)</span>
+    <span class="nx">results</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">numJobs</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Спершу - запускаємо 3 функції-працівника, які блокуватимуться
+під час виконання (тому що жодної роботи для них поки що існує).</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="k">for</span> <span class="nx">w</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">w</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">;</span> <span class="nx">w</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="nx">worker</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="nx">jobs</span><span class="p">,</span> <span class="nx">results</span><span class="p">)</span>
+    <span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Далі - Надішлемо 5 завдань до каналу роботи, після чого
+закриває канал щоб вказати що це вся робота що, наразі, доступна.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="k">for</span> <span class="nx">j</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;=</span> <span class="nx">numJobs</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span> <span class="p">{</span>
+        <span class="nx">jobs</span> <span class="o">&lt;-</span> <span class="nx">j</span>
+    <span class="p">}</span>
+    <span class="nb">close</span><span class="p">(</span><span class="nx">jobs</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>І, нарешті, отримуємо результати роботи наших працівників.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre>    <span class="k">for</span> <span class="nx">a</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">a</span> <span class="o">&lt;=</span> <span class="nx">numJobs</span><span class="p">;</span> <span class="nx">a</span><span class="o">++</span> <span class="p">{</span>
+        <span class="o">&lt;-</span><span class="nx">results</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p>Наша програма покаже 5 завдань - що виконуються
+різними працівниками. Програма працює близько
+2 секунд, не зважаючи на роботу розраховану
+вцілому на 5 секунд - і все це завдяки 3&rsquo;ом
+працівникам, що працюються одночасно.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="gp">$</span> <span class="nb">time</span> go run worker-pools.go
+<span class="go">працівник 1 почав проботу над завданням 2</span>
+<span class="go">працівник 3 почав проботу над завданням 1</span>
+<span class="go">працівник 2 почав проботу над завданням 3</span>
+<span class="go">працівник 1 закінчив роботу над завданням 2</span>
+<span class="go">працівник 3 закінчив роботу над завданням 1</span>
+<span class="go">працівник 3 почав проботу над завданням 5</span>
+<span class="go">працівник 2 закінчив роботу над завданням 3</span>
+<span class="go">працівник 1 почав проботу над завданням 4</span>
+<span class="go">працівник 1 закінчив роботу над завданням 4</span>
+<span class="go">працівник 3 закінчив роботу над завданням 5</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code">
+			
+			<div class="highlight"><pre><span class="go">real    0m2.322s</span>
+<span class="go">user    0m0.231s</span>
+<span class="go">sys    0m0.290s</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+	<p class="next">
+		Наступний приклад: <a href="rate-limiting.html">Обмеження Частоти Запитів</a>.
+	</p>
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/worker-pools">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import (\u000A    \"fmt\"\u000A    \"time\"\u000A)\u000A');codeLines.push('func worker(id int, jobs \x3C-chan int, results chan\x3C- int) {\u000A    for j := range jobs {\u000A        fmt.Println(\"працівник\", id, \"почав проботу\", j)\u000A        time.Sleep(time.Second)\u000A        fmt.Println(\"працівник\", id, \"закінчив роботу\", j)\u000A        results \x3C- j * 2\u000A    }\u000A}\u000A');codeLines.push('func main() {\u000A');codeLines.push('    const numJobs = 5\u000A    jobs := make(chan int, numJobs)\u000A    results := make(chan int, numJobs)\u000A');codeLines.push('    for w := 1; w \x3C= 3; w++ {\u000A        go worker(w, jobs, results)\u000A    }\u000A');codeLines.push('    for j := 1; j \x3C= numJobs; j++ {\u000A        jobs \x3C- j\u000A    }\u000A    close(jobs)\u000A');codeLines.push('    for a := 1; a \x3C= numJobs; a++ {\u000A        \x3C-results\u000A    }\u000A}\u000A');codeLines.push('');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>

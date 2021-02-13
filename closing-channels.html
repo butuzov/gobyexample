@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-eqiv="content-type" content="text/html;charset=utf-8" />
+	<title>Go за Прикладом: Закриття каналів</title>
+	<link rel=stylesheet href="site.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-75170058-3"></script>
+	<script type="text/javascript">
+	getLocation = (href) => {
+		var l = document.createElement("a");
+		l.href = href;
+		return l;
+	}
+
+	var link = getLocation(window.location.href);
+
+	switch (link.hostname) {
+		case 'gobyexample.com.ua':
+			window.location.href = "https://butuzov.github.io/gobyexample" + link.pathname.replace(/\/+$/,'')
+		break;
+		case 'butuzov.github.io':
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js',      new Date());
+			gtag('config', 'UA-75170058-3');
+		break;
+	}
+	</script>
+	<script>
+	onkeydown = (e) => {
+	
+		if (e.key == "ArrowLeft") {
+			window.location.href = 'non-blocking-channel-operations.html';
+		}
+	
+	
+		if (e.key == "ArrowRight") {
+			window.location.href = 'range-over-channels.html';
+		}
+	
+	}
+  </script>
+</head>
+<body>
+	<div class="example" id="closing-channels">
+	<h2><a href="./">Go за Прикладом</a>: Закриття каналів</h2>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"><p><em>Закриття</em> каналу вказує на те, що більше жодних значень
+в нього відправлено не буде. Це стає в нагоді при передачі
+повідомлення про завершення до отримувачів каналу.</p>
+</td>
+			<td class="code empty leading">
+			
+			
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			<a href="http://play.golang.org/p/kS_OS_XU3HV"><img title="Run code" src="play.png" class="run" /></a><img title="Copy code" src="clipboard.png" class="copy" />
+			<div class="highlight"><pre><span class="kn">package</span> <span class="nx">main</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kn">import</span> <span class="s">&quot;fmt&quot;</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>В цьому прикладі ми скористаємось каналом <code>jobs</code> для
+комунікації задач між горутиною в <code>main()</code> та робочою горутиною.
+Коли роботи більше немає - ми закриємо канал <code>jobs</code> за допомогою <code>close</code>.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">jobs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="nx">done</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">bool</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Це робоча горутина, вона безперервно отримує з каналу
+<code>jobs</code> завдання (за допомогою <code>j, more := &lt;-jobs</code>).
+У цій конструкції якщо <code>more</code> буде <code>false</code> канал <code>jobs</code>
+закриється і всі значення з нього будуть вийняті.
+Ми скористаємось цим для відправки в канал <code>done</code>
+повідомлення що завдання закінчені і програма може
+завершити свою роботу.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">{</span>
+            <span class="nx">j</span><span class="p">,</span> <span class="nx">more</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">jobs</span>
+            <span class="k">if</span> <span class="nx">more</span> <span class="p">{</span>
+                <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;отримане завдання&quot;</span><span class="p">,</span> <span class="nx">j</span><span class="p">)</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;усі завдання отримані&quot;</span><span class="p">)</span>
+                <span class="nx">done</span> <span class="o">&lt;-</span> <span class="kc">true</span>
+                <span class="k">return</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Оце надішле 3 задачі до робочої горутини через канал
+<code>jobs</code>, після чого закриє його.</p>
+</td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre>    <span class="k">for</span> <span class="nx">j</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span> <span class="p">{</span>
+        <span class="nx">jobs</span> <span class="o">&lt;-</span> <span class="nx">j</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;надіслано завдання&quot;</span><span class="p">,</span> <span class="nx">j</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nb">close</span><span class="p">(</span><span class="nx">jobs</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;усі завдання надіслані&quot;</span><span class="p">)</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ми чекаємо коли горутина робітник використає
+<a href="channel-synchronization">синхронізацію</a> що
+ми бачили раніше.</p>
+</td>
+			<td class="code">
+			
+			<div class="highlight"><pre>    <span class="o">&lt;-</span><span class="nx">done</span>
+<span class="p">}</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+	</table>
+	
+	<table>
+		
+		<tr>
+			<td class="docs"></td>
+			<td class="code leading">
+			
+			<div class="highlight"><pre><span class="gp">$</span> go run closing-channels.go
+<span class="go">надіслано завдання 1</span>
+<span class="go">надіслано завдання 2</span>
+<span class="go">надіслано завдання 3</span>
+<span class="go">усі завдання надіслані</span>
+<span class="go">отримане завдання 1</span>
+<span class="go">отримане завдання 2</span>
+<span class="go">отримане завдання 3</span>
+<span class="go">усі завдання отримані</span>
+</pre></div>
+
+			</td>
+		</tr>
+	
+		<tr>
+			<td class="docs"><p>Ідея закритих каналів приводить нас до
+наступного прикладу: використання <code>range</code> з каналами.</p>
+</td>
+			<td class="code empty">
+			
+			
+			</td>
+		</tr>
+	
+	</table>
+	
+
+
+	<p class="next">
+		Наступний приклад: <a href="range-over-channels.html">Діапазон (Range) з Каналами</a>.
+	</p>
+
+<p class="footer">
+Автор <a href="https://twitter.com/mmcgrana">@mmcgrana</a> | Переклад <a href="https://twitter.com/butuzov">@butuzov</a> | <a href="https://github.com/butuzov/gobyexample/blob/ukrainian/examples/closing-channels">source</a> | <a href="https://github.com/butuzov/gobyexample#license">ліцензія</a>
+</p>
+
+<script>
+var codeLines = [];
+codeLines.push('');codeLines.push('package main\u000A');codeLines.push('import \"fmt\"\u000A');codeLines.push('func main() {\u000A    jobs := make(chan int, 5)\u000A    done := make(chan bool)\u000A');codeLines.push('    go func() {\u000A        for {\u000A            j, more := \x3C-jobs\u000A            if more {\u000A                fmt.Println(\"отримане завдання\", j)\u000A            } else {\u000A                fmt.Println(\"усі завдання отримані\")\u000A                done \x3C- true\u000A                return\u000A            }\u000A        }\u000A    }()\u000A');codeLines.push('    for j := 1; j \x3C= 3; j++ {\u000A        jobs \x3C- j\u000A        fmt.Println(\"надіслано завдання\", j)\u000A    }\u000A    close(jobs)\u000A    fmt.Println(\"усі завдання надіслані\")\u000A');codeLines.push('    \x3C-done\u000A}\u000A');codeLines.push('');codeLines.push('');
+</script>
+<script src="site.js" async></script>
+</div>
+</body>
+</html>
